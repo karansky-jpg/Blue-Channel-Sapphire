@@ -218,24 +218,38 @@
   .menu-item .dot{flex:1;border-bottom:2px dotted rgba(25,42,86,.22);margin:0 6px;position:relative;top:-4px;}
   .menu-item .price{font-family:'Jost',sans-serif;font-weight:500;color:var(--navy);font-size:13px;white-space:nowrap;}
   
-  /* Advanced Bar Menu Items (3 prices) */
-  .menu-item.bar-item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    padding: 12px 6px;
-    border-bottom: 1px dashed rgba(25,42,86,.15);
+  /* Advanced Bar Menu Items (2 prices list format) */
+  .bar-header {
+    display: flex;
+    padding: 0 4px 8px;
+    margin-top: 10px;
+    border-bottom: 1px solid rgba(25,42,86,.15);
   }
-  .menu-item.bar-item:last-child { border-bottom: none; }
-  .menu-item.bar-item .name-wrap { width: 100%; justify-content: flex-start; }
-  .bar-prices { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; }
-  .bp-col {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: rgba(25,42,86,.04); padding: 6px 4px; border-radius: 8px; flex: 1;
-    border: 1px solid rgba(25,42,86,.05);
+  .bh-spacer { flex: 1; }
+  .bh-title {
+    width: 65px;
+    text-align: right;
+    font-size: 10px;
+    font-weight: 600;
+    color: #8a7f6c;
+    letter-spacing: .05em;
+    text-transform: uppercase;
   }
-  .bp-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #8a7f6c; margin-bottom: 3px; }
-  .bp-val { font-family: 'Jost', sans-serif; font-weight: 600; color: var(--navy); font-size: 13px; }
+  .menu-item.bar-list-item {
+    padding: 10px 4px;
+    border-bottom: 1px dashed rgba(25,42,86,.12);
+  }
+  .menu-item.bar-list-item:last-child { border-bottom: none; }
+  .menu-item.bar-list-item .name-wrap { flex: 1; justify-content: flex-start; padding-right: 10px; }
+  .menu-item.bar-list-item .dot { display: none; } /* Hide dotted line for bar list items */
+  .bp-val-col {
+    width: 65px;
+    text-align: right;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    color: var(--navy);
+    font-size: 14px;
+  }
 
   /* Image Categories (Cocktails/Mocktails) */
   .img-page-wrap { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
@@ -479,23 +493,34 @@ function truthy(v){
 }
 
 function buildMenuFromRows(rows){
-  // strict replacement to allow "25 * 30 ml" or "25 x 30 ml" to safely parse to "25x30ml"
-  const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,'').replace(/\*/g,'x'));
-  const idx = (keys)=> headers.findIndex(h=> keys.some(k=>h.includes(k)));
-  const typeI = idx(['type','menu']);
-  const catI  = idx(['category','section']);
-  const nameI = idx(['item','name','dish']);
-  const vegI  = idx(['veg','diet']);
-  const chefI = idx(['chef','special']);
-  const spicyI= idx(['spicy','hot']);
+  // Crucial Fix: Replaces standard 'x', uppercase 'X', asterisk '*', AND the mathematical multiplication sign '×' with a consistent 'x'
+  const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,'').replace(/[\*×X]/g,'x'));
   
-  // Base price (mostly for food)
-  const priceI= idx(['price','rate','cost','rs']);
+  const typeI = headers.findIndex(h => h.includes('type') || h.includes('menu'));
+  const catI  = headers.findIndex(h => h.includes('category') || h.includes('section'));
+  const nameI = headers.findIndex(h => h.includes('item') || h.includes('name') || h.includes('dish'));
+  const vegI  = headers.findIndex(h => h.includes('veg') || h.includes('diet'));
+  const chefI = headers.findIndex(h => h.includes('chef') || h.includes('special'));
+  const spicyI= headers.findIndex(h => h.includes('spicy') || h.includes('hot'));
   
-  // Multi-pricing for Bar (stricter matching to avoid cross-contamination)
-  const p30I = headers.findIndex(h => (h.includes('30') && !h.includes('x')) || h.includes('peg') || h.includes('single'));
-  const p180I = headers.findIndex(h => h.includes('180') || h.includes('6x30') || h.includes('half') || h.includes('quarter'));
-  const p750I = headers.findIndex(h => h.includes('750') || h.includes('25x30') || h.includes('bottle') || h.includes('full'));
+  const priceI= headers.findIndex(h => h.includes('price') || h.includes('rate') || h.includes('cost') || h.includes('rs'));
+  
+  // Stricter matching for Multi-pricing for Bar (Only 30ml and 6x30ml now)
+  let p30I = headers.findIndex(h => (h.includes('30') && !h.includes('6x') && !h.includes('25x')) || h.includes('peg') || h.includes('single'));
+  let p180I = headers.findIndex(h => h.includes('6x30') || h.includes('180') || h.includes('half') || h.includes('quarter'));
+
+  // Fallback: If none of the specific columns (30ml, 6x30, etc.) are found by name, 
+  // try to find generic sequentially named price columns (e.g., Price 1, Price 2).
+  if (p30I === -1 && p180I === -1) {
+      const genPrices = [];
+      headers.forEach((h, i) => {
+          if (h.includes('price') || h.includes('rs') || h.includes('rate') || h.includes('cost')) {
+              genPrices.push(i);
+          }
+      });
+      if (genPrices.length > 0) p30I = genPrices[0];
+      if (genPrices.length > 1) p180I = genPrices[1];
+  }
 
   const data = { Food:{}, Bar:{} };
   for(let i=1;i<rows.length;i++){
@@ -526,16 +551,14 @@ function buildMenuFromRows(rows){
     if (type === 'Bar') {
       let p30 = p30I !== -1 ? (r[p30I]||'').trim() : '';
       let p180 = p180I !== -1 ? (r[p180I]||'').trim() : '';
-      let p750 = p750I !== -1 ? (r[p750I]||'').trim() : '';
 
-      // Fallback: If 3-columns aren't present but generic price is, put it in 30ml
-      if(!p30 && !p180 && !p750 && priceI !== -1) {
+      // Fallback for single generic price
+      if(!p30 && !p180 && priceI !== -1) {
           p30 = (r[priceI]||'').trim();
       }
 
       itemObj.price30 = fmt(p30);
       itemObj.price180 = fmt(p180);
-      itemObj.price750 = fmt(p750);
     } else {
       let price = priceI!==-1 ? (r[priceI]||'').trim() : '';
       itemObj.price = price ? fmt(price) : '₹00';
@@ -692,21 +715,24 @@ function renderCategoryItems(type, cat){
     return;
   }
 
-  // Bar Layout with 3 prices
+  // Bar Layout with 2 column prices (list format)
   if(type === 'Bar') {
     wrap.innerHTML = `
       <div class="cat-block">
         <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
+        <div class="bar-header">
+          <div class="bh-spacer"></div>
+          <div class="bh-title">30 ML</div>
+          <div class="bh-title">6x30 ML</div>
+        </div>
         ${items.map(it=>`
-          <div class="menu-item bar-item">
-            <div class="name-wrap">
-              <span style="display:flex;align-items:center;gap:6px;">${itemBadges(it)} <span class="name">${escapeHtml(it.name)}</span></span>
-            </div>
-            <div class="bar-prices">
-              <div class="bp-col"><span class="bp-lbl">30ml</span><span class="bp-val">${escapeHtml(it.price30)}</span></div>
-              <div class="bp-col"><span class="bp-lbl">6x30ml</span><span class="bp-val">${escapeHtml(it.price180)}</span></div>
-              <div class="bp-col"><span class="bp-lbl">25x30ml</span><span class="bp-val">${escapeHtml(it.price750)}</span></div>
-            </div>
+          <div class="menu-item bar-list-item">
+            <span class="name-wrap">
+              ${itemBadges(it)}
+              <span class="name">${escapeHtml(it.name)}</span>
+            </span>
+            <span class="bp-val-col">${escapeHtml(it.price30)}</span>
+            <span class="bp-val-col">${escapeHtml(it.price180)}</span>
           </div>
         `).join('')}
       </div>
