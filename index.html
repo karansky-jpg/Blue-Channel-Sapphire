@@ -405,6 +405,13 @@ const SPECIAL_BAR_CATS = {
   ]
 };
 
+/* Helper: Check if Bar Category should have only 1 price section */
+function isSinglePriceBarCategory(cat) {
+  const norm = (cat || '').trim().toLowerCase();
+  const singlePriceKeywords = ['shake', 'hot beverage', 'cold beverage', 'bar snack', 'snack'];
+  return singlePriceKeywords.some(kw => norm.includes(kw));
+}
+
 /* ============ BOOK NAVIGATION ============ */
 let currentPage = 1;
 const totalPages = 3;
@@ -493,7 +500,7 @@ function truthy(v){
 }
 
 function buildMenuFromRows(rows){
-  // Crucial Fix: Replaces standard 'x', uppercase 'X', asterisk '*', AND the mathematical multiplication sign '×' with a consistent 'x'
+  // Replaces standard 'x', uppercase 'X', asterisk '*', AND the mathematical multiplication sign '×' with a consistent 'x'
   const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,'').replace(/[\*×X]/g,'x'));
   
   const typeI = headers.findIndex(h => h.includes('type') || h.includes('menu'));
@@ -546,23 +553,23 @@ function buildMenuFromRows(rows){
       return p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'');
     };
 
-    const itemObj = { name, veg, chefSpecial, spicy };
+    let price = priceI !== -1 ? (r[priceI]||'').trim() : '';
+    let p30 = p30I !== -1 ? (r[p30I]||'').trim() : '';
+    let p180 = p180I !== -1 ? (r[p180I]||'').trim() : '';
 
-    if (type === 'Bar') {
-      let p30 = p30I !== -1 ? (r[p30I]||'').trim() : '';
-      let p180 = p180I !== -1 ? (r[p180I]||'').trim() : '';
+    // Ensure both single price and p30 fall back to each other if one is empty
+    if (!price && p30) price = p30;
+    if (!p30 && price) p30 = price;
 
-      // Fallback for single generic price
-      if(!p30 && !p180 && priceI !== -1) {
-          p30 = (r[priceI]||'').trim();
-      }
-
-      itemObj.price30 = fmt(p30);
-      itemObj.price180 = fmt(p180);
-    } else {
-      let price = priceI!==-1 ? (r[priceI]||'').trim() : '';
-      itemObj.price = price ? fmt(price) : '₹00';
-    }
+    const itemObj = { 
+      name, 
+      veg, 
+      chefSpecial, 
+      spicy,
+      price: price ? fmt(price) : '₹00',
+      price30: fmt(p30),
+      price180: fmt(p180)
+    };
 
     if(!data[type][cat]) data[type][cat] = [];
     data[type][cat].push(itemObj);
@@ -715,8 +722,11 @@ function renderCategoryItems(type, cat){
     return;
   }
 
-  // Bar Layout with 2 column prices (list format)
-  if(type === 'Bar') {
+  // Determine if this category should render with the single food layout
+  const isSinglePrice = type === 'Food' || isSinglePriceBarCategory(category);
+
+  // Bar Layout with 2 column prices (list format) for spirits/beers
+  if(!isSinglePrice) {
     wrap.innerHTML = `
       <div class="cat-block">
         <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
@@ -738,7 +748,7 @@ function renderCategoryItems(type, cat){
       </div>
     `;
   } else {
-    // Standard Food Layout
+    // Standard Food / Single Price Layout (for Shakes, Beverages, Snacks)
     wrap.innerHTML = `
       <div class="cat-block">
         <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
@@ -790,7 +800,7 @@ searchInput.addEventListener('input', ()=>{
   
   searchResults.innerHTML = matches.slice(0,25).map(m=>{
     let displayPrice = m.price;
-    if (m.type === 'Bar') {
+    if (m.type === 'Bar' && !isSinglePriceBarCategory(m.cat)) {
        displayPrice = (m.price30 && m.price30 !== '-') ? `${m.price30} (30ml)` : (m.price || '');
     }
     return `
