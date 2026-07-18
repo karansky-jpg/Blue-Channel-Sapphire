@@ -479,7 +479,8 @@ function truthy(v){
 }
 
 function buildMenuFromRows(rows){
-  const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,''));
+  // strict replacement to allow "25 * 30 ml" or "25 x 30 ml" to safely parse to "25x30ml"
+  const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,'').replace(/\*/g,'x'));
   const idx = (keys)=> headers.findIndex(h=> keys.some(k=>h.includes(k)));
   const typeI = idx(['type','menu']);
   const catI  = idx(['category','section']);
@@ -491,10 +492,10 @@ function buildMenuFromRows(rows){
   // Base price (mostly for food)
   const priceI= idx(['price','rate','cost','rs']);
   
-  // Multi-pricing for Bar
-  const p30I = idx(['30ml','30','peg','price1']);
-  const p180I = idx(['6x30','180ml','180','half','price2']);
-  const p750I = idx(['25x30','750ml','750','full','bottle','price3']);
+  // Multi-pricing for Bar (stricter matching to avoid cross-contamination)
+  const p30I = headers.findIndex(h => (h.includes('30') && !h.includes('x')) || h.includes('peg') || h.includes('single'));
+  const p180I = headers.findIndex(h => h.includes('180') || h.includes('6x30') || h.includes('half') || h.includes('quarter'));
+  const p750I = headers.findIndex(h => h.includes('750') || h.includes('25x30') || h.includes('bottle') || h.includes('full'));
 
   const data = { Food:{}, Bar:{} };
   for(let i=1;i<rows.length;i++){
@@ -796,4 +797,3 @@ loadMenu();
 </script>
 </body>
 </html>
-
