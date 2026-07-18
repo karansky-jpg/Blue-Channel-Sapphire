@@ -89,8 +89,6 @@
   .book{
     position:relative;width:100%;max-width:430px;height:min(72vh,660px);
     transform-style:preserve-3d;
-    /* let the browser handle vertical scrolling natively inside the book,
-       while we still read horizontal gestures ourselves for the page-turn */
     touch-action:pan-y;
   }
   .book-spine{
@@ -197,11 +195,7 @@
   .menu-head h3{font-family:'Marcellus',serif;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);font-size:16px;margin:0;}
   .cat-scroller{
     display:flex;gap:8px;padding:12px 16px;overflow-x:auto;border-bottom:1px solid rgba(25,42,86,.08);
-    /* this bar scrolls horizontally on its own — don't let the book's
-       page-turn swipe detector fight it */
-    touch-action:pan-x;
-    overscroll-behavior-x:contain;
-    -webkit-overflow-scrolling:touch;
+    touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
   }
   .cat-chip{
     flex:0 0 auto;padding:7px 15px;border-radius:20px;border:1px solid rgba(25,42,86,.25);
@@ -216,11 +210,41 @@
     border-bottom:2px solid var(--gold);display:inline-block;padding-bottom:4px;margin-bottom:12px;
   }
   .cat-title-wrap{text-align:center;}
+  
+  /* Standard Food Menu Items */
   .menu-item{display:flex;align-items:baseline;justify-content:space-between;padding:6px 4px;gap:6px;}
   .menu-item .name-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
   .menu-item .name{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--ink);font-size:15px;}
   .menu-item .dot{flex:1;border-bottom:2px dotted rgba(25,42,86,.22);margin:0 6px;position:relative;top:-4px;}
   .menu-item .price{font-family:'Jost',sans-serif;font-weight:500;color:var(--navy);font-size:13px;white-space:nowrap;}
+  
+  /* Advanced Bar Menu Items (3 prices) */
+  .menu-item.bar-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px 6px;
+    border-bottom: 1px dashed rgba(25,42,86,.15);
+  }
+  .menu-item.bar-item:last-child { border-bottom: none; }
+  .menu-item.bar-item .name-wrap { width: 100%; justify-content: flex-start; }
+  .bar-prices { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; }
+  .bp-col {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(25,42,86,.04); padding: 6px 4px; border-radius: 8px; flex: 1;
+    border: 1px solid rgba(25,42,86,.05);
+  }
+  .bp-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #8a7f6c; margin-bottom: 3px; }
+  .bp-val { font-family: 'Jost', sans-serif; font-weight: 600; color: var(--navy); font-size: 13px; }
+
+  /* Image Categories (Cocktails/Mocktails) */
+  .img-page-wrap { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
+  .img-page-wrap img {
+    width: 100%; height: auto; border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(25,42,86,.15); display: block;
+    background: rgba(25,42,86,.05); /* placeholder background */
+  }
+
   .menu-empty{text-align:center;color:#9a9284;font-size:13px;padding:40px 10px;}
   .menu-loading{text-align:center;color:#9a9284;font-size:13px;padding:40px 10px;}
   .menu-foot{padding:12px 18px 16px;text-align:center;border-top:1px solid rgba(25,42,86,.1);}
@@ -353,6 +377,20 @@
   </footer>
 
 <script>
+/* ============ SPECIAL BAR IMAGES ============ */
+const SPECIAL_BAR_CATS = {
+  'Cocktails': [
+    'https://i.ibb.co/1GJD6TVN/Screenshot-20260716-161411-Files-by-Google.jpg',
+    'https://i.ibb.co/SDmjx6dQ/Screenshot-20260716-161429-Files-by-Google.jpg',
+    'https://i.ibb.co/ksQdb0rF/Screenshot-20260716-161444-Files-by-Google.jpg'
+  ],
+  'Mocktails': [
+    'https://i.ibb.co/ffMCzCj/Screenshot-20260716-161500-Files-by-Google.jpg',
+    'https://i.ibb.co/tMD783LR/Screenshot-20260716-161504-Files-by-Google.jpg',
+    'https://i.ibb.co/rRCdDDkn/Screenshot-20260716-161515-Files-by-Google.jpg'
+  ]
+};
+
 /* ============ BOOK NAVIGATION ============ */
 let currentPage = 1;
 const totalPages = 3;
@@ -368,16 +406,10 @@ function updatePageClasses(){
 }
 function goToPage(n){
   if(n<1||n>totalPages||n===currentPage) return;
-  // page 3 (the menu) should only ever be reached by explicitly choosing
-  // Food or Bar on page 2 — never by swiping/dots/keyboard
   if(n===3 && activeType===null) return;
   currentPage = n; updatePageClasses();
 }
 
-/* ---- swipe-to-turn, but ignore gestures that start inside a
-   horizontally/vertically scrollable inner element (category chip bar,
-   item list, category grid, search results) so they scroll instead of
-   flipping the page ---- */
 const bookEl = document.getElementById('book');
 let touchStartX = 0, touchStartY = 0;
 let swipeArmed = true;
@@ -399,12 +431,9 @@ bookEl.addEventListener('touchend', e=>{
 
 function handleSwipe(distX, distY){
   const threshold = 50;
-  // a mostly-vertical gesture is a scroll, not a page turn
   if(Math.abs(distX) < Math.abs(distY)) return;
 
   if(distX < -threshold){
-    // forward swipe — disabled from page 2 onward. The menu (page 3)
-    // must only be opened by tapping "Food Menu" / "Bar Menu".
     if(currentPage >= 2) return;
     if(currentPage < totalPages){ currentPage++; updatePageClasses(); }
   } else if(distX > threshold && currentPage > 1){
@@ -417,11 +446,10 @@ document.addEventListener('keydown', e=>{
   else if(e.key==='ArrowRight' && currentPage<totalPages && currentPage<2){ currentPage++; updatePageClasses(); }
 });
 
-/* ============ MENU DATA (from Google Sheet) ============ */
+/* ============ MENU DATA ============ */
 const SHEET_ID = "13Uj_BetnGSAhWhs4bkTf78sJXHsq8Vo8NswwrP8tr5s";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 
-// data[type] = { category: [ {name, price} ] }
 let MENU = { Food: {}, Bar: {} };
 let activeType = null;
 let activeCategory = null;
@@ -451,15 +479,22 @@ function truthy(v){
 }
 
 function buildMenuFromRows(rows){
-  const headers = rows[0].map(h=>h.toLowerCase().trim());
+  const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,''));
   const idx = (keys)=> headers.findIndex(h=> keys.some(k=>h.includes(k)));
   const typeI = idx(['type','menu']);
   const catI  = idx(['category','section']);
   const nameI = idx(['item','name','dish']);
-  const priceI= idx(['price','rate','cost','rs']);
   const vegI  = idx(['veg','diet']);
   const chefI = idx(['chef','special']);
   const spicyI= idx(['spicy','hot']);
+  
+  // Base price (mostly for food)
+  const priceI= idx(['price','rate','cost','rs']);
+  
+  // Multi-pricing for Bar
+  const p30I = idx(['30ml','30','peg','price1']);
+  const p180I = idx(['6x30','180ml','180','half','price2']);
+  const p750I = idx(['25x30','750ml','750','full','bottle','price3']);
 
   const data = { Food:{}, Bar:{} };
   for(let i=1;i<rows.length;i++){
@@ -468,10 +503,8 @@ function buildMenuFromRows(rows){
     if(!name) continue;
     const type = typeI!==-1 ? normType(r[typeI]) : 'Food';
     const cat = catI!==-1 ? (r[catI]||'Other').trim() : 'Other';
-    let price = priceI!==-1 ? (r[priceI]||'').trim() : '';
-    if(price && !price.startsWith('₹')) price = '₹'+price.replace(/^rs\.?\s*/i,'');
-    if(!price) price = '₹00';
 
+    // Parse diets/badges
     let veg = null;
     if(vegI!==-1){
       const v = (r[vegI]||'').toLowerCase().trim();
@@ -480,9 +513,35 @@ function buildMenuFromRows(rows){
     }
     const chefSpecial = chefI!==-1 ? truthy(r[chefI]) : false;
     const spicy = spicyI!==-1 ? truthy(r[spicyI]) : false;
+    
+    // Formatting helper
+    const fmt = p => {
+      if(!p || p==='-') return '-';
+      return p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'');
+    };
+
+    const itemObj = { name, veg, chefSpecial, spicy };
+
+    if (type === 'Bar') {
+      let p30 = p30I !== -1 ? (r[p30I]||'').trim() : '';
+      let p180 = p180I !== -1 ? (r[p180I]||'').trim() : '';
+      let p750 = p750I !== -1 ? (r[p750I]||'').trim() : '';
+
+      // Fallback: If 3-columns aren't present but generic price is, put it in 30ml
+      if(!p30 && !p180 && !p750 && priceI !== -1) {
+          p30 = (r[priceI]||'').trim();
+      }
+
+      itemObj.price30 = fmt(p30);
+      itemObj.price180 = fmt(p180);
+      itemObj.price750 = fmt(p750);
+    } else {
+      let price = priceI!==-1 ? (r[priceI]||'').trim() : '';
+      itemObj.price = price ? fmt(price) : '₹00';
+    }
 
     if(!data[type][cat]) data[type][cat] = [];
-    data[type][cat].push({ name, price, veg, chefSpecial, spicy });
+    data[type][cat].push(itemObj);
   }
   return data;
 }
@@ -508,7 +567,7 @@ async function loadMenu(){
 }
 
 /* ============ MENU RENDERING ============ */
-let menuView = 'category'; // 'category' | 'items'
+let menuView = 'category';
 
 function openMenu(type){
   activeType = type;
@@ -532,7 +591,14 @@ function showCategoryGrid(type){
   document.getElementById('categoryGrid').style.display = 'grid';
   document.getElementById('itemsView').style.display = 'none';
 
-  const cats = Object.keys(MENU[type] || {});
+  let cats = Object.keys(MENU[type] || {});
+  
+  if(type === 'Bar') {
+    const special = ['Cocktails', 'Mocktails'];
+    cats = cats.filter(c => !special.includes(c)); // remove from random positions
+    cats = [...special, ...cats]; // force them to the top always
+  }
+
   const grid = document.getElementById('categoryGrid');
 
   if(cats.length === 0){
@@ -540,14 +606,24 @@ function showCategoryGrid(type){
     return;
   }
 
-  const catIcon = type === 'Bar' ? 'fa-martini-glass-citrus' : 'fa-utensils';
+  const defaultIcon = type === 'Bar' ? 'fa-martini-glass-citrus' : 'fa-utensils';
   grid.innerHTML = cats.map(c=>{
-    const count = (MENU[type][c]||[]).length;
+    let countText = '';
+    let iconClass = defaultIcon;
+
+    if(type === 'Bar' && (c === 'Cocktails' || c === 'Mocktails')) {
+      countText = 'Special Menu';
+      iconClass = c === 'Cocktails' ? 'fa-wine-glass' : 'fa-glass-water';
+    } else {
+      const count = (MENU[type][c]||[]).length;
+      countText = `${count} item${count===1?'':'s'}`;
+    }
+
     return `
       <div class="category-card" onclick="selectCategory('${escapeAttr(c)}')">
-        <i class="fa-solid ${catIcon} cc-icon"></i>
+        <i class="fa-solid ${iconClass} cc-icon"></i>
         <div class="cc-name">${escapeHtml(c)}</div>
-        <div class="cc-count">${count} item${count===1?'':'s'}</div>
+        <div class="cc-count">${countText}</div>
       </div>`;
   }).join('');
 }
@@ -559,7 +635,13 @@ function selectCategory(cat){
   const itemsView = document.getElementById('itemsView');
   itemsView.style.display = 'flex';
 
-  const cats = Object.keys(MENU[activeType] || {});
+  let cats = Object.keys(MENU[activeType] || {});
+  if(activeType === 'Bar') {
+    const special = ['Cocktails', 'Mocktails'];
+    cats = cats.filter(c => !special.includes(c));
+    cats = [...special, ...cats];
+  }
+
   const scroller = document.getElementById('catScroller');
   scroller.innerHTML = cats.map(c=>
     `<div class="cat-chip${c===activeCategory?' active':''}" data-cat="${escapeHtml(c)}" onclick="selectCategoryChip('${escapeAttr(c)}', this)">${escapeHtml(c)}</div>`
@@ -587,33 +669,71 @@ function itemBadges(it){
 
 function renderCategoryItems(type, cat){
   const category = cat || activeCategory;
-  const items = (MENU[type] && MENU[type][category]) || [];
   const wrap = document.getElementById('itemsScroll');
+
+  // Intercept Special Image Categories
+  if(type === 'Bar' && (category === 'Cocktails' || category === 'Mocktails')) {
+    const images = SPECIAL_BAR_CATS[category];
+    wrap.innerHTML = `
+      <div class="cat-block">
+        <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
+        <div class="img-page-wrap">
+          ${images.map(src => `<img src="${src}" alt="${category} Menu Image" loading="lazy">`).join('')}
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const items = (MENU[type] && MENU[type][category]) || [];
   if(items.length === 0){
     wrap.innerHTML = `<div class="menu-empty">No items in this category yet.</div>`;
     return;
   }
-  wrap.innerHTML = `
-    <div class="cat-block">
-      <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
-      ${items.map(it=>`
-        <div class="menu-item">
-          <span class="name-wrap">
-            ${itemBadges(it)}
-            <span class="name">${escapeHtml(it.name)}</span>
-          </span>
-          <span class="dot"></span>
-          <span class="price">${escapeHtml(it.price)}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
+
+  // Bar Layout with 3 prices
+  if(type === 'Bar') {
+    wrap.innerHTML = `
+      <div class="cat-block">
+        <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
+        ${items.map(it=>`
+          <div class="menu-item bar-item">
+            <div class="name-wrap">
+              <span style="display:flex;align-items:center;gap:6px;">${itemBadges(it)} <span class="name">${escapeHtml(it.name)}</span></span>
+            </div>
+            <div class="bar-prices">
+              <div class="bp-col"><span class="bp-lbl">30ml</span><span class="bp-val">${escapeHtml(it.price30)}</span></div>
+              <div class="bp-col"><span class="bp-lbl">6x30ml</span><span class="bp-val">${escapeHtml(it.price180)}</span></div>
+              <div class="bp-col"><span class="bp-lbl">25x30ml</span><span class="bp-val">${escapeHtml(it.price750)}</span></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } else {
+    // Standard Food Layout
+    wrap.innerHTML = `
+      <div class="cat-block">
+        <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
+        ${items.map(it=>`
+          <div class="menu-item">
+            <span class="name-wrap">
+              ${itemBadges(it)}
+              <span class="name">${escapeHtml(it.name)}</span>
+            </span>
+            <span class="dot"></span>
+            <span class="price">${escapeHtml(it.price)}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
 }
 
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function escapeAttr(s){ return (s||'').replace(/'/g, "\\'"); }
 
-/* ============ SEARCH (across Food + Bar) ============ */
+/* ============ SEARCH ============ */
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
 
@@ -624,6 +744,9 @@ searchInput.addEventListener('input', ()=>{
   const matches = [];
   ['Food','Bar'].forEach(type=>{
     Object.keys(MENU[type]||{}).forEach(cat=>{
+      // Skip Special Categories for Search since they are image-only pages now
+      if (type === 'Bar' && (cat === 'Cocktails' || cat === 'Mocktails')) return;
+      
       MENU[type][cat].forEach(it=>{
         if(it.name.toLowerCase().includes(q)){
           matches.push({ ...it, type, cat });
@@ -637,15 +760,22 @@ searchInput.addEventListener('input', ()=>{
     searchResults.innerHTML = `<div class="sr-empty">No dish matches “${escapeHtml(searchInput.value)}”</div>`;
     return;
   }
-  searchResults.innerHTML = matches.slice(0,25).map(m=>`
-    <div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')">
-      <div>
-        <div class="sr-name">${escapeHtml(m.name)}</div>
-        <div class="sr-tag">${escapeHtml(m.type)} Menu · ${escapeHtml(m.cat)}</div>
+  
+  searchResults.innerHTML = matches.slice(0,25).map(m=>{
+    let displayPrice = m.price;
+    if (m.type === 'Bar') {
+       displayPrice = (m.price30 && m.price30 !== '-') ? `${m.price30} (30ml)` : (m.price || '');
+    }
+    return `
+      <div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')">
+        <div>
+          <div class="sr-name">${escapeHtml(m.name)}</div>
+          <div class="sr-tag">${escapeHtml(m.type)} Menu · ${escapeHtml(m.cat)}</div>
+        </div>
+        <div class="sr-price">${escapeHtml(displayPrice)}</div>
       </div>
-      <div class="sr-price">${escapeHtml(m.price)}</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 });
 
 function jumpToSearchResult(type, cat){
@@ -666,6 +796,4 @@ loadMenu();
 </script>
 </body>
 </html>
-
-
 
