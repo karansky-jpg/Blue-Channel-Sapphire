@@ -21,9 +21,9 @@
   html,body{
     margin:0;padding:0;width:100%;height:100%;overflow-x:hidden;
     background:var(--ink);font-family:'Jost',sans-serif;
-    overscroll-behavior:none; /* Prevents iOS full-page bounce (x and y) */
+    overscroll-behavior:none; 
   }
-  ::-webkit-scrollbar{display:none; width:0px;} /* Hide scrollbars for cleaner mobile view */
+  ::-webkit-scrollbar{display:none; width:0px;} 
   a{text-decoration:none;}
 
   /* ---------- top brand ---------- */
@@ -51,7 +51,7 @@
     border:1px solid rgba(247,215,148,.35);background:rgba(255,255,255,.04);
     color:var(--gold);font-family:'Jost',sans-serif;font-size:13px;letter-spacing:.02em;
     outline:none;transition:border-color .25s;
-    -webkit-appearance:none; appearance:none; /* Normalizes iOS inputs */
+    -webkit-appearance:none; appearance:none; 
   }
   .search-box input::placeholder{color:#7c8598;}
   .search-box input:focus{border-color:var(--gold);}
@@ -81,13 +81,15 @@
     padding:8px 10px 10px;position:relative;
   }
   .book-container{
-    perspective:2000px;width:100%;display:flex;justify-content:center;
+    perspective:2000px; -webkit-perspective: 2000px;
+    width:100%;display:flex;justify-content:center;
   }
   .book{
     position:relative;width:100%;max-width:430px;height:min(72vh,660px);
     transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
-    touch-action: pan-y; /* CRITICAL: Prevents native horizontal swiping/jitter on iOS/Android */
+    touch-action: pan-y; 
     user-select: none; -webkit-user-select: none;
+    transform: translateZ(0); -webkit-transform: translateZ(0);
   }
   .book-spine{
     position:absolute;left:0;top:0;width:12px;height:100%;
@@ -99,24 +101,27 @@
     transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
     transform-origin:left center; -webkit-transform-origin:left center;
     transition:transform .55s cubic-bezier(.645,.045,.355,1);
+    -webkit-transition:-webkit-transform .55s cubic-bezier(.645,.045,.355,1); 
     pointer-events:none;z-index:1;
     will-change:transform;
     backface-visibility:hidden; -webkit-backface-visibility:hidden;
   }
   .book-page.active{pointer-events:auto;}
-  .book-page.flipped{transform:rotateY(-180deg); -webkit-transform:rotateY(-180deg);}
+  .book-page.flipped{
+    transform:rotateY(-180deg); -webkit-transform:rotateY(-180deg);
+  }
   .page-face{
     position:absolute;width:100%;height:100%;
     backface-visibility:hidden; -webkit-backface-visibility:hidden;
     border-radius:4px 14px 14px 4px;box-shadow:5px 5px 26px rgba(0,0,0,.35);
     overflow:hidden;background:var(--paper);
-    transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); /* Hardware acceleration to stop flicker */
+    transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); 
   }
   .page-face.back{transform:rotateY(180deg); -webkit-transform:rotateY(180deg);}
   .page-overlay{
     position:absolute;inset:0;pointer-events:none;z-index:10;
     background:#000;opacity:0;
-    transition:opacity .55s ease;
+    transition:opacity .55s ease; -webkit-transition:opacity .55s ease;
     will-change:opacity;
   }
   .book-page.flipped .page-overlay{opacity:.14;}
@@ -171,8 +176,9 @@
   .cover-line{width:60px;height:1px;background:var(--gold);margin:0 auto 14px;}
   .cover-brand{
     font-family:'Cinzel',serif;font-weight:700;color:var(--gold);
-    font-size:30px;letter-spacing:.22em;text-transform:uppercase;
+    font-size:32px;letter-spacing:.22em;text-transform:uppercase;
     margin:0 0 8px;text-shadow:0 2px 14px rgba(0,0,0,.45);
+    line-height: 1.3; 
   }
   .cover-tag{
     font-family:'Cormorant Garamond',serif;font-style:italic;color:#e9e4d8;font-size:15px;letter-spacing:.06em;
@@ -220,7 +226,7 @@
   .items-scroll{
     flex:1;overflow-y:auto;padding:16px 18px 20px;
     touch-action:pan-y;-webkit-overflow-scrolling:touch;
-    overscroll-behavior:contain; /* Stop nested scrolling bounce */
+    overscroll-behavior:contain; 
   }
   .cat-block{margin-bottom:22px;}
   .cat-title{
@@ -230,48 +236,40 @@
   }
   .cat-title-wrap{text-align:center;}
   
-  /* Standard Food Menu Items */
-  .menu-item{display:flex;align-items:baseline;justify-content:space-between;padding:6px 4px;gap:6px;}
-  .menu-item .name-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-  .menu-item .name{font-family:'Cormorant Garamond',serif;font-weight:800;color:var(--ink);font-size:16px;}
-  .menu-item .dot{flex:1;border-bottom:2px dotted rgba(25,42,86,.22);margin:0 6px;position:relative;top:-4px;}
-  .menu-item .price{font-family:'Jost',sans-serif;font-weight:500;color:var(--navy);font-size:13px;white-space:nowrap;}
+  /* Standard Food Menu Items & Descriptions */
+  .menu-item { display: flex; flex-direction: column; padding: 6px 4px; gap: 4px; }
+  .item-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; width: 100%; }
+  
+  .item-top .name-wrap { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .item-top .name { font-family: 'Cormorant Garamond', serif; font-weight: 800; color: var(--ink); font-size: 16px; }
+  .item-top .dot { flex: 1; border-bottom: 2px dotted rgba(25,42,86,.22); margin: 0 6px; position: relative; top: -4px; }
+  .item-top .price { font-family: 'Jost', sans-serif; font-weight: 500; color: var(--navy); font-size: 13px; white-space: nowrap; }
   
   /* Advanced Bar Menu Items */
+  .menu-item.bar-list-item { padding: 10px 4px; border-bottom: 1px dashed rgba(25,42,86,.12); }
+  .menu-item.bar-list-item:last-child { border-bottom: none; }
+  .menu-item.bar-list-item .item-top .name-wrap { flex: 1; justify-content: flex-start; padding-right: 5px; }
+  .menu-item.bar-list-item .item-top .dot { display: none; }
+  
   .bar-header {
-    display: flex;
-    padding: 0 4px 8px;
-    margin-top: 10px;
-    border-bottom: 1px solid rgba(25,42,86,.15);
+    display: flex; padding: 0 4px 8px; margin-top: 10px; border-bottom: 1px solid rgba(25,42,86,.15);
   }
   .bh-spacer { flex: 1; }
   .bh-title {
-    width: 55px;
-    flex: 0 0 auto;
-    margin-left: 5px;
-    text-align: right;
-    font-size: 10px;
-    font-weight: 600;
-    color: #8a7f6c;
-    letter-spacing: .03em;
-    text-transform: uppercase;
+    width: 55px; flex: 0 0 auto; margin-left: 5px; text-align: right; font-size: 10px;
+    font-weight: 600; color: #8a7f6c; letter-spacing: .03em; text-transform: uppercase;
   }
-  .menu-item.bar-list-item {
-    padding: 10px 4px;
-    border-bottom: 1px dashed rgba(25,42,86,.12);
-  }
-  .menu-item.bar-list-item:last-child { border-bottom: none; }
-  .menu-item.bar-list-item .name-wrap { flex: 1; justify-content: flex-start; padding-right: 5px; }
-  .menu-item.bar-list-item .dot { display: none; }
+  
   .bp-val-col {
-    width: 55px;
-    flex: 0 0 auto;
-    margin-left: 5px;
-    text-align: right;
-    font-family: 'Jost', sans-serif;
-    font-weight: 500;
-    color: var(--navy);
-    font-size: 13.5px;
+    width: 55px; flex: 0 0 auto; margin-left: 5px; text-align: right;
+    font-family: 'Jost', sans-serif; font-weight: 500; color: var(--navy); font-size: 13.5px;
+  }
+
+  /* Descriptions formatting */
+  .item-desc {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14.5px;
+    color: #a9822f; /* Premium readable gold matching the chef icon */
+    padding-left: 20px; line-height: 1.25; margin-top: -2px;
   }
 
   /* Image Categories */
@@ -373,7 +371,7 @@
 
   <div class="search-wrap">
     <div class="search-box">
-      <input id="searchInput" type="text" placeholder="Search a dish or category...">
+      <input id="searchInput" type="text" placeholder="Search a dish, category, or ingredient...">
       <i class="fa-solid fa-magnifying-glass"></i>
       <div id="searchResults"></div>
     </div>
@@ -393,7 +391,8 @@
               <div class="cover-mid"></div>
               <div class="cover-bottom">
                 <div class="cover-line"></div>
-                <div class="cover-brand">Blue Channel</div>
+                <!-- Forced break to guarantee exact identical styling on iOS/Android -->
+                <div class="cover-brand">BLUE<br>CHANNEL</div>
                 <p class="cover-tag">Global Flavours, Timeless Elegance</p>
                 <div class="swipe-pill">Swipe left for menu <i class="fa-solid fa-angles-right"></i></div>
               </div>
@@ -583,12 +582,13 @@ function buildMenuFromRows(rows){
   const typeI = headers.findIndex(h => /\b(type|menu)\b/.test(h));
   const catI  = headers.findIndex(h => /\b(category|section)\b/.test(h));
   const nameI = headers.findIndex(h => /\b(item|name|dish)\b/.test(h));
+  const descI = headers.findIndex(h => /\b(desc|description|details)\b/.test(h)); // Extracts description
   const chefI = headers.findIndex(h => /\b(chef|special)\b/.test(h));
   const spicyI= headers.findIndex(h => /\b(spicy|hot)\b/.test(h));
   
   const vegI = headers.findIndex(h => /\b(veg|diet|type)\b/i.test(h) || h.includes('veg/non'));
 
-  const cols = { reg: -1, ml30: -1, ml180: -1, glass: -1, bottle: -1, pint: -1, can: -1, ml500: -1, ml1000: -1 };
+  const cols = { reg: -1, ml30: -1, ml180: -1, glass: -1, bottle: -1, pint: -1, ml500: -1, ml1000: -1 };
   const allPriceCols = [];
 
   headers.forEach((h, i) => {
@@ -598,11 +598,11 @@ function buildMenuFromRows(rows){
     if(/\bglass\b/.test(h) && cols.glass === -1) cols.glass = i;
     if(/\bbottle\b/.test(h) && cols.bottle === -1) cols.bottle = i;
     if(/\bpint\b/.test(h) && cols.pint === -1) cols.pint = i;
-    if(/\bcan\b/.test(h) && cols.can === -1) cols.can = i;
     if(/\b500\b/.test(h) && cols.ml500 === -1) cols.ml500 = i;
     if(/\b1000\b/.test(h) && cols.ml1000 === -1) cols.ml1000 = i;
 
-    if (/\b(price|rs|rate|cost|30|180|6x|peg|single|glass|bottle|pint|can|500|1000)\b/i.test(h) || h.includes('₹')) {
+    // We no longer scan for 'can' specifically since it's deleted
+    if (/\b(price|rs|rate|cost|30|180|6x|peg|single|glass|bottle|pint|500|1000)\b/i.test(h) || h.includes('₹')) {
         allPriceCols.push(i);
     }
   });
@@ -614,6 +614,7 @@ function buildMenuFromRows(rows){
     const name = nameI!==-1 ? (r[nameI]||'').trim() : '';
     if(!name) continue;
     
+    const description = descI!==-1 ? (r[descI]||'').trim() : '';
     const type = typeI!==-1 ? normType(r[typeI]) : 'Food';
     const cat = catI!==-1 ? (r[catI]||'Other').trim() : 'Other';
 
@@ -639,9 +640,8 @@ function buildMenuFromRows(rows){
     let p30 = getVal(cols.ml30);
     let p180 = getVal(cols.ml180);
     let pGlass = getVal(cols.glass);
-    let pBottle = getVal(cols.bottle);
+    let pBottle = getVal(cols.bottle); // The actual 'Bottle' column data for beer
     let pPint = getVal(cols.pint);
-    let pCan = getVal(cols.can);
     let p500 = getVal(cols.ml500);
     let p1000 = getVal(cols.ml1000);
 
@@ -653,9 +653,10 @@ function buildMenuFromRows(rows){
             price1 = pGlass !== '-' ? pGlass : (validPrices[0] || '-');
             price2 = pBottle !== '-' ? pBottle : (validPrices[1] || '-');
         } else if (cLower.includes('beer')) {
+            // "Can" is now fully removed, extracting strictly Bottle and Pint data
             price1 = pBottle !== '-' ? pBottle : (validPrices[0] || '-');
             price2 = pPint !== '-' ? pPint : (validPrices[1] || '-');
-            price3 = pCan !== '-' ? pCan : (validPrices[2] || '-');
+            price3 = '-'; 
         } else if (cLower.includes('long island')) {
             price1 = p500 !== '-' ? p500 : (validPrices[0] || '-');
             price2 = p1000 !== '-' ? p1000 : (validPrices[1] || '-');
@@ -669,7 +670,7 @@ function buildMenuFromRows(rows){
         price1 = pReg !== '-' ? pReg : (validPrices[0] || '-');
     }
 
-    const itemObj = { name, veg, chefSpecial, spicy, price1, price2, price3 };
+    const itemObj = { name, description, veg, chefSpecial, spicy, price1, price2, price3 };
 
     if(!data[type][cat]) data[type][cat] = [];
     data[type][cat].push(itemObj);
@@ -831,7 +832,8 @@ function renderCategoryItems(type, cat){
     if (cLower.includes('wine')) {
       cols = 2; h1 = 'Glass'; h2 = 'Bottle';
     } else if (cLower.includes('beer')) {
-      cols = 3; h1 = 'Bottle'; h2 = 'Pint'; h3 = 'Can';
+      // Renamed Bottle to Bottle/Can, Can completely removed
+      cols = 2; h1 = 'Bottle/Can'; h2 = 'Pint'; h3 = '';
     } else if (cLower.includes('long island')) {
       cols = 2; h1 = '500 ML'; h2 = '1000 ML';
     }
@@ -847,13 +849,16 @@ function renderCategoryItems(type, cat){
         </div>
         ${items.map(it=>`
           <div class="menu-item bar-list-item">
-            <span class="name-wrap">
-              ${itemBadges(it)}
-              <span class="name">${escapeHtml(it.name)}</span>
-            </span>
-            <span class="bp-val-col">${escapeHtml(it.price1)}</span>
-            ${cols >= 2 ? `<span class="bp-val-col">${escapeHtml(it.price2)}</span>` : ''}
-            ${cols >= 3 ? `<span class="bp-val-col">${escapeHtml(it.price3)}</span>` : ''}
+            <div class="item-top">
+              <span class="name-wrap">
+                ${itemBadges(it)}
+                <span class="name">${escapeHtml(it.name)}</span>
+              </span>
+              <span class="bp-val-col">${escapeHtml(it.price1)}</span>
+              ${cols >= 2 ? `<span class="bp-val-col">${escapeHtml(it.price2)}</span>` : ''}
+              ${cols >= 3 ? `<span class="bp-val-col">${escapeHtml(it.price3)}</span>` : ''}
+            </div>
+            ${it.description ? `<div class="item-desc">${escapeHtml(it.description)}</div>` : ''}
           </div>
         `).join('')}
       </div>
@@ -864,12 +869,15 @@ function renderCategoryItems(type, cat){
         <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
         ${items.map(it=>`
           <div class="menu-item">
-            <span class="name-wrap">
-              ${itemBadges(it)}
-              <span class="name">${escapeHtml(it.name)}</span>
-            </span>
-            <span class="dot"></span>
-            <span class="price">${escapeHtml(it.price1)}</span>
+            <div class="item-top">
+              <span class="name-wrap">
+                ${itemBadges(it)}
+                <span class="name">${escapeHtml(it.name)}</span>
+              </span>
+              <span class="dot"></span>
+              <span class="price">${escapeHtml(it.price1)}</span>
+            </div>
+            ${it.description ? `<div class="item-desc">${escapeHtml(it.description)}</div>` : ''}
           </div>
         `).join('')}
       </div>
@@ -897,7 +905,8 @@ searchInput.addEventListener('input', ()=>{
       if (cat.toLowerCase().includes(q)) catMatches.push({ isCat: true, name: cat, type: type, cat: cat });
 
       MENU[type][cat].forEach(it=>{
-        if(it.name.toLowerCase().includes(q)){
+        // Search matches name OR description content now!
+        if(it.name.toLowerCase().includes(q) || (it.description && it.description.toLowerCase().includes(q))){
           itemMatches.push({ isCat: false, ...it, type, cat });
         }
       });
@@ -928,7 +937,7 @@ searchInput.addEventListener('input', ()=>{
       
       if (m.type === 'Bar' && !isSinglePriceBarCategory(m.cat)) {
         if (cLower.includes('wine')) displayPrice = `${m.price1} (Glass)`;
-        else if (cLower.includes('beer')) displayPrice = `${m.price1} (Bottle)`;
+        else if (cLower.includes('beer')) displayPrice = `${m.price1} (Bottle/Can)`; // Updated search display for beer
         else if (cLower.includes('long island')) displayPrice = `${m.price1} (500ml)`;
         else displayPrice = `${m.price1} (30ml)`;
       }
