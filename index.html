@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hotel Sapphire — Digital Menu</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Marcellus&family=Jost:wght@300;400;500;600&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Marcellus&family=Jost:wght@300;400;500;600&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -17,7 +17,7 @@
     --navy-soft:#22366e;
     --paper:#fbf8f1;
   }
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0;padding:0;width:100%;height:100%;overflow-x:hidden;background:var(--ink);font-family:'Jost',sans-serif;}
   ::-webkit-scrollbar{width:4px;}
   ::-webkit-scrollbar-track{background:transparent;}
@@ -68,6 +68,7 @@
   #searchResults{
     max-width:440px;margin:8px auto 0;background:var(--paper);border-radius:10px;
     overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;max-height:280px;overflow-y:auto;
+    position: absolute; width: 100%; z-index: 2000;
   }
   #searchResults .sr-item{
     display:flex;justify-content:space-between;align-items:baseline;gap:10px;
@@ -75,8 +76,8 @@
   }
   #searchResults .sr-item:last-child{border-bottom:none;}
   #searchResults .sr-item:hover{background:rgba(25,42,86,.06);}
-  #searchResults .sr-name{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--navy);font-size:15px;}
-  #searchResults .sr-tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8a7440;}
+  #searchResults .sr-name{font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--navy);font-size:15px;}
+  #searchResults .sr-tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8a7440;margin-top:2px;}
   #searchResults .sr-price{font-family:'Jost',sans-serif;font-weight:500;color:var(--navy);font-size:13px;}
   #searchResults .sr-empty{padding:16px;text-align:center;color:#8a94a3;font-size:12px;}
 
@@ -88,8 +89,7 @@
   .book-container{perspective:2000px;width:100%;display:flex;justify-content:center;}
   .book{
     position:relative;width:100%;max-width:430px;height:min(72vh,660px);
-    transform-style:preserve-3d;
-    touch-action:pan-y;
+    transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
   }
   .book-spine{
     position:absolute;left:0;top:0;width:12px;height:100%;
@@ -98,20 +98,22 @@
   }
   .book-page{
     position:absolute;width:100%;height:100%;top:0;left:0;
-    transform-style:preserve-3d;transform-origin:left center;
+    transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+    transform-origin:left center; -webkit-transform-origin:left center;
     transition:transform .55s cubic-bezier(.645,.045,.355,1);
     pointer-events:none;z-index:1;
     will-change:transform;
-    backface-visibility:hidden;
+    backface-visibility:hidden; -webkit-backface-visibility:hidden;
   }
   .book-page.active{pointer-events:auto;}
-  .book-page.flipped{transform:rotateY(-180deg);}
+  .book-page.flipped{transform:rotateY(-180deg); -webkit-transform:rotateY(-180deg);}
   .page-face{
-    position:absolute;width:100%;height:100%;backface-visibility:hidden;
+    position:absolute;width:100%;height:100%;
+    backface-visibility:hidden; -webkit-backface-visibility:hidden;
     border-radius:4px 14px 14px 4px;box-shadow:5px 5px 26px rgba(0,0,0,.35);
     overflow:hidden;background:var(--paper);
   }
-  .page-face.back{transform:rotateY(180deg);}
+  .page-face.back{transform:rotateY(180deg); -webkit-transform:rotateY(180deg);}
   .page-overlay{
     position:absolute;inset:0;pointer-events:none;z-index:10;
     background:#000;opacity:0;
@@ -120,7 +122,7 @@
   }
   .book-page.flipped .page-overlay{opacity:.14;}
 
-  /* dots */
+  /* dots & footers */
   footer.foot{
     display:flex;flex-direction:column;align-items:center;gap:10px;
     padding:6px 12px 22px;background:var(--ink);
@@ -131,10 +133,13 @@
   .sync{font-size:10px;color:#7c8598;display:flex;align-items:center;gap:6px;}
   .dotpulse{width:7px;height:7px;border-radius:50%;background:#e2b93b;animation:pulse 1.4s infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  
+  .foot-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
   .review-btn{
     display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--ink);
-    font-family:'Jost',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
-    padding:11px 26px;border-radius:30px;box-shadow:0 6px 18px rgba(247,215,148,.25);transition:.25s;
+    font-family:'Jost',sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+    padding:11px 18px;border-radius:30px;box-shadow:0 6px 18px rgba(247,215,148,.25);transition:.25s;
+    cursor:pointer;border:none;
   }
   .review-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(247,215,148,.35);}
 
@@ -144,7 +149,7 @@
   }
   .cover-img{
     position:absolute;inset:0;background-size:cover;background-position:center;
-    background-image:linear-gradient(rgba(25,42,86,.12),rgba(30,39,46,.55) 78%,rgba(30,39,46,.92)),url('https://i.ibb.co/Hfdr0JjK/Picsart-26-07-13-01-35-43-365.jpg');
+    background-image:linear-gradient(rgba(25,42,86,.12),rgba(30,39,46,.55) 78%,rgba(30,39,46,.92)),url('https://i.ibb.co/bgbgzqJg/Screenshot-20260718-192253-Gallery.jpg');
   }
   .cover-inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:34px 22px;}
   .cover-top{text-align:center;}
@@ -155,8 +160,8 @@
   .cover-mid{text-align:center;}
   .cover-line{width:60px;height:1px;background:var(--gold);margin:0 auto 14px;}
   .cover-brand{
-    font-family:'Cinzel',serif;font-weight:600;color:var(--gold);
-    font-size:20px;letter-spacing:.22em;text-transform:uppercase;
+    font-family:'Cinzel',serif;font-weight:700;color:var(--gold);
+    font-size:30px;letter-spacing:.22em;text-transform:uppercase;
     margin:0 0 8px;text-shadow:0 2px 14px rgba(0,0,0,.45);
   }
   .cover-tag{
@@ -191,7 +196,7 @@
     display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;
     border-bottom:1px solid rgba(25,42,86,.12);
   }
-  .menu-head .back-link{color:var(--navy);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+  .menu-head .back-link{color:var(--navy);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px; padding:4px;}
   .menu-head h3{font-family:'Marcellus',serif;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);font-size:16px;margin:0;}
   .cat-scroller{
     display:flex;gap:8px;padding:12px 16px;overflow-x:auto;border-bottom:1px solid rgba(25,42,86,.08);
@@ -214,11 +219,11 @@
   /* Standard Food Menu Items */
   .menu-item{display:flex;align-items:baseline;justify-content:space-between;padding:6px 4px;gap:6px;}
   .menu-item .name-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-  .menu-item .name{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--ink);font-size:15px;}
+  .menu-item .name{font-family:'Cormorant Garamond',serif;font-weight:800;color:var(--ink);font-size:16px;}
   .menu-item .dot{flex:1;border-bottom:2px dotted rgba(25,42,86,.22);margin:0 6px;position:relative;top:-4px;}
   .menu-item .price{font-family:'Jost',sans-serif;font-weight:500;color:var(--navy);font-size:13px;white-space:nowrap;}
   
-  /* Advanced Bar Menu Items (2 prices list format) */
+  /* Advanced Bar Menu Items */
   .bar-header {
     display: flex;
     padding: 0 4px 8px;
@@ -227,12 +232,14 @@
   }
   .bh-spacer { flex: 1; }
   .bh-title {
-    width: 65px;
+    width: 55px; /* Fits up to 3 columns nicely on mobile */
+    flex: 0 0 auto;
+    margin-left: 5px;
     text-align: right;
     font-size: 10px;
     font-weight: 600;
     color: #8a7f6c;
-    letter-spacing: .05em;
+    letter-spacing: .03em;
     text-transform: uppercase;
   }
   .menu-item.bar-list-item {
@@ -240,31 +247,33 @@
     border-bottom: 1px dashed rgba(25,42,86,.12);
   }
   .menu-item.bar-list-item:last-child { border-bottom: none; }
-  .menu-item.bar-list-item .name-wrap { flex: 1; justify-content: flex-start; padding-right: 10px; }
-  .menu-item.bar-list-item .dot { display: none; } /* Hide dotted line for bar list items */
+  .menu-item.bar-list-item .name-wrap { flex: 1; justify-content: flex-start; padding-right: 5px; }
+  .menu-item.bar-list-item .dot { display: none; }
   .bp-val-col {
-    width: 65px;
+    width: 55px;
+    flex: 0 0 auto;
+    margin-left: 5px;
     text-align: right;
     font-family: 'Jost', sans-serif;
     font-weight: 500;
     color: var(--navy);
-    font-size: 14px;
+    font-size: 13.5px;
   }
 
-  /* Image Categories (Cocktails/Mocktails) */
+  /* Image Categories */
   .img-page-wrap { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
   .img-page-wrap img {
     width: 100%; height: auto; border-radius: 12px;
     box-shadow: 0 4px 16px rgba(25,42,86,.15); display: block;
-    background: rgba(25,42,86,.05); /* placeholder background */
+    background: rgba(25,42,86,.05);
   }
 
   .menu-empty{text-align:center;color:#9a9284;font-size:13px;padding:40px 10px;}
   .menu-loading{text-align:center;color:#9a9284;font-size:13px;padding:40px 10px;}
   .menu-foot{padding:12px 18px 16px;text-align:center;border-top:1px solid rgba(25,42,86,.1);}
   .allergy-note{
-    font-family:'Cormorant Garamond',serif;font-style:italic;color:#8a7f6c;font-size:12.5px;
-    margin:0 0 12px;letter-spacing:.01em;
+    font-family:'Cormorant Garamond',serif;font-style:italic;color:#8a7f6c;font-size:13.5px;
+    margin:0 0 12px;letter-spacing:.01em; line-height:1.4;
   }
 
   /* diet marks + badges */
@@ -288,11 +297,59 @@
   }
   .category-card:hover{border-color:var(--navy);box-shadow:0 8px 20px rgba(25,42,86,.12);transform:translateY(-2px);}
   .category-card .cc-icon{color:var(--gold);font-size:18px;margin-bottom:8px;display:block;}
-  .category-card .cc-name{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--navy);font-size:14.5px;text-transform:uppercase;letter-spacing:.05em;}
-  .category-card .cc-count{font-size:10px;color:#9a9284;margin-top:3px;letter-spacing:.06em;}
+  .category-card .cc-name{font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--navy);font-size:14.5px;text-transform:uppercase;letter-spacing:.05em;}
+  
+  /* ---------- MODAL ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    padding: 20px;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .modal-card {
+    background: var(--paper); width: 100%; max-width: 360px; padding: 26px 22px;
+    border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    transform: translateY(20px); transition: transform 0.3s ease;
+  }
+  .modal-overlay.show .modal-card { transform: translateY(0); }
+  .modal-title { 
+    font-family: 'Marcellus', serif; color: var(--navy); margin: 0 0 16px; 
+    font-size: 20px; text-align: center; border-bottom: 1px solid rgba(25,42,86,0.15); 
+    padding-bottom: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .modal-list { list-style: none; padding: 0; margin: 0 0 20px; color: var(--ink); font-size: 14.5px; line-height: 1.6; }
+  .modal-list li { margin-bottom: 10px; padding-left: 18px; position: relative; font-family:'Jost', sans-serif;}
+  .modal-list li::before { content: '•'; position: absolute; left: 2px; color: var(--gold); font-size: 18px; top: -1px; }
+  .modal-thanks { text-align: center; font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--navy); margin-bottom: 22px; }
+  .modal-close { 
+    display: block; width: 100%; padding: 13px; background: var(--navy); color: var(--gold); 
+    border: none; border-radius: 8px; font-family: 'Jost', sans-serif; font-size: 14px; 
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: 0.2s; 
+  }
+  .modal-close:hover { background: var(--ink); }
+
 </style>
 </head>
 <body>
+
+  <!-- Important Notes Modal -->
+  <div id="notesModal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 class="modal-title">Important Notes</h3>
+      <ul class="modal-list">
+        <li>No service charges is levied.</li>
+        <li>All rates are exclusive of GST.</li>
+        <li>Food items which are banned will not be served.</li>
+        <li>Last order by 11:00pm.</li>
+        <li>No outside food and beverages are allowed.</li>
+        <li>Right of Admission Reserved.</li>
+      </ul>
+      <p class="modal-thanks">Thanks,<br>Management</p>
+      <button class="modal-close" onclick="closeNotes()">Close</button>
+    </div>
+  </div>
 
   <a class="agency-bar" href="https://karan-digital-menu-agency.vercel.app/" target="_blank" rel="noopener">
     <i class="fa-solid fa-sparkles"></i> Created by Karan Digital Menu Agency <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -305,7 +362,7 @@
 
   <div class="search-wrap">
     <div class="search-box">
-      <input id="searchInput" type="text" placeholder="Search a dish, e.g. Paneer Tikka">
+      <input id="searchInput" type="text" placeholder="Search a dish or category...">
       <i class="fa-solid fa-magnifying-glass"></i>
       <div id="searchResults"></div>
     </div>
@@ -368,10 +425,15 @@
               <div class="items-scroll" id="itemsScroll"></div>
             </div>
             <div class="menu-foot">
-              <p class="allergy-note">Please let us know if you are allergic to any ingredient.</p>
-              <a class="review-btn" href="https://g.page/r/CZV62OngG6STEBE/review" target="_blank" rel="noopener">
-                <i class="fa-solid fa-star"></i> Review Us
-              </a>
+              <p class="allergy-note" id="dynamicFooterNotes"></p>
+              <div class="foot-buttons">
+                <button class="review-btn" onclick="openNotes()">
+                  <i class="fa-solid fa-clipboard-list"></i> Notes
+                </button>
+                <a class="review-btn" href="https://g.page/r/CZV62OngG6STEBE/review" target="_blank" rel="noopener">
+                  <i class="fa-solid fa-star"></i> Review Us
+                </a>
+              </div>
             </div>
           </div>
           <div class="page-overlay"></div>
@@ -391,6 +453,13 @@
   </footer>
 
 <script>
+/* ============ MODAL LOGIC ============ */
+function openNotes() { document.getElementById('notesModal').classList.add('show'); }
+function closeNotes() { document.getElementById('notesModal').classList.remove('show'); }
+document.getElementById('notesModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeNotes();
+});
+
 /* ============ SPECIAL BAR IMAGES ============ */
 const SPECIAL_BAR_CATS = {
   'Cocktails': [
@@ -405,10 +474,9 @@ const SPECIAL_BAR_CATS = {
   ]
 };
 
-/* Helper: Check if Bar Category should have only 1 price section */
 function isSinglePriceBarCategory(cat) {
   const norm = (cat || '').trim().toLowerCase();
-  const singlePriceKeywords = ['shake', 'hot beverage', 'cold beverage', 'bar snack', 'snack'];
+  const singlePriceKeywords = ['shake', 'hot beverage', 'cold beverage', 'bar snack', 'snack', 'champagne', 'shot'];
   return singlePriceKeywords.some(kw => norm.includes(kw));
 }
 
@@ -500,7 +568,6 @@ function truthy(v){
 }
 
 function buildMenuFromRows(rows){
-  // Replaces standard 'x', uppercase 'X', asterisk '*', AND the mathematical multiplication sign '×' with a consistent 'x'
   const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,'').replace(/[\*×X]/g,'x'));
   
   const typeI = headers.findIndex(h => h.includes('type') || h.includes('menu'));
@@ -510,24 +577,13 @@ function buildMenuFromRows(rows){
   const chefI = headers.findIndex(h => h.includes('chef') || h.includes('special'));
   const spicyI= headers.findIndex(h => h.includes('spicy') || h.includes('hot'));
   
-  const priceI= headers.findIndex(h => h.includes('price') || h.includes('rate') || h.includes('cost') || h.includes('rs'));
-  
-  // Stricter matching for Multi-pricing for Bar (Only 30ml and 6x30ml now)
-  let p30I = headers.findIndex(h => (h.includes('30') && !h.includes('6x') && !h.includes('25x')) || h.includes('peg') || h.includes('single'));
-  let p180I = headers.findIndex(h => h.includes('6x30') || h.includes('180') || h.includes('half') || h.includes('quarter'));
-
-  // Fallback: If none of the specific columns (30ml, 6x30, etc.) are found by name, 
-  // try to find generic sequentially named price columns (e.g., Price 1, Price 2).
-  if (p30I === -1 && p180I === -1) {
-      const genPrices = [];
-      headers.forEach((h, i) => {
-          if (h.includes('price') || h.includes('rs') || h.includes('rate') || h.includes('cost')) {
-              genPrices.push(i);
-          }
-      });
-      if (genPrices.length > 0) p30I = genPrices[0];
-      if (genPrices.length > 1) p180I = genPrices[1];
-  }
+  // Extract up to 3 price columns dynamically
+  const priceIndices = [];
+  headers.forEach((h, i) => {
+    if (/price|rs|rate|cost|30|180|6x|peg|single|glass|bottle|pint|can|500|1000/i.test(h)) {
+      priceIndices.push(i);
+    }
+  });
 
   const data = { Food:{}, Bar:{} };
   for(let i=1;i<rows.length;i++){
@@ -537,38 +593,28 @@ function buildMenuFromRows(rows){
     const type = typeI!==-1 ? normType(r[typeI]) : 'Food';
     const cat = catI!==-1 ? (r[catI]||'Other').trim() : 'Other';
 
-    // Parse diets/badges
+    // Parse diets/badges robustly
     let veg = null;
     if(vegI!==-1){
-      const v = (r[vegI]||'').toLowerCase().trim();
-      if(v.includes('non')) veg = false;
-      else if(v) veg = true;
+      const v = (r[vegI]||'').toString().toLowerCase().trim();
+      if(v.includes('non') || v === 'nv') veg = false;
+      else if(v.includes('veg') || v === 'yes' || v === 'y' || v === 'true' || v === '1' || v === 'v') veg = true;
     }
     const chefSpecial = chefI!==-1 ? truthy(r[chefI]) : false;
     const spicy = spicyI!==-1 ? truthy(r[spicyI]) : false;
     
-    // Formatting helper
     const fmt = p => {
-      if(!p || p==='-') return '-';
-      return p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'');
+      if(!p || p==='-' || p.toLowerCase()==='na') return '-';
+      return p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'').trim();
     };
 
-    let price = priceI !== -1 ? (r[priceI]||'').trim() : '';
-    let p30 = p30I !== -1 ? (r[p30I]||'').trim() : '';
-    let p180 = p180I !== -1 ? (r[p180I]||'').trim() : '';
-
-    // Ensure both single price and p30 fall back to each other if one is empty
-    if (!price && p30) price = p30;
-    if (!p30 && price) p30 = price;
+    let p1 = priceIndices.length > 0 ? fmt(r[priceIndices[0]]) : '-';
+    let p2 = priceIndices.length > 1 ? fmt(r[priceIndices[1]]) : '-';
+    let p3 = priceIndices.length > 2 ? fmt(r[priceIndices[2]]) : '-';
 
     const itemObj = { 
-      name, 
-      veg, 
-      chefSpecial, 
-      spicy,
-      price: price ? fmt(price) : '₹00',
-      price30: fmt(p30),
-      price180: fmt(p180)
+      name, veg, chefSpecial, spicy,
+      price1: p1, price2: p2, price3: p3
     };
 
     if(!data[type][cat]) data[type][cat] = [];
@@ -603,6 +649,15 @@ let menuView = 'category';
 function openMenu(type){
   activeType = type;
   document.getElementById('menuTitle').textContent = type === 'Food' ? 'Food Menu' : 'Bar Menu';
+  
+  // Set dynamic footer notes
+  const footNote = document.getElementById('dynamicFooterNotes');
+  if(type === 'Bar') {
+    footNote.innerHTML = `All rates are exclusive of GST.<br>Standard measure is 30ml.<br>Brands are subject to availability.<br>Please let us know if you are allergic to any ingredient.`;
+  } else {
+    footNote.innerHTML = `All rates are exclusive of GST.<br>Please let us know if you are allergic to any ingredient.`;
+  }
+
   currentPage = 3; updatePageClasses();
   showCategoryGrid(type);
 }
@@ -626,8 +681,8 @@ function showCategoryGrid(type){
   
   if(type === 'Bar') {
     const special = ['Cocktails', 'Mocktails'];
-    cats = cats.filter(c => !special.includes(c)); // remove from random positions
-    cats = [...special, ...cats]; // force them to the top always
+    cats = cats.filter(c => !special.includes(c)); 
+    cats = [...special, ...cats]; 
   }
 
   const grid = document.getElementById('categoryGrid');
@@ -639,22 +694,14 @@ function showCategoryGrid(type){
 
   const defaultIcon = type === 'Bar' ? 'fa-martini-glass-citrus' : 'fa-utensils';
   grid.innerHTML = cats.map(c=>{
-    let countText = '';
     let iconClass = defaultIcon;
-
-    if(type === 'Bar' && (c === 'Cocktails' || c === 'Mocktails')) {
-      countText = 'Special Menu';
-      iconClass = c === 'Cocktails' ? 'fa-wine-glass' : 'fa-glass-water';
-    } else {
-      const count = (MENU[type][c]||[]).length;
-      countText = `${count} item${count===1?'':'s'}`;
-    }
+    if(type === 'Bar' && c === 'Cocktails') iconClass = 'fa-wine-glass';
+    else if(type === 'Bar' && c === 'Mocktails') iconClass = 'fa-glass-water';
 
     return `
       <div class="category-card" onclick="selectCategory('${escapeAttr(c)}')">
         <i class="fa-solid ${iconClass} cc-icon"></i>
         <div class="cc-name">${escapeHtml(c)}</div>
-        <div class="cc-count">${countText}</div>
       </div>`;
   }).join('');
 }
@@ -722,18 +769,30 @@ function renderCategoryItems(type, cat){
     return;
   }
 
-  // Determine if this category should render with the single food layout
   const isSinglePrice = type === 'Food' || isSinglePriceBarCategory(category);
+  const cLower = category.toLowerCase();
 
-  // Bar Layout with 2 column prices (list format) for spirits/beers
   if(!isSinglePrice) {
+    // Dynamic Columns Logic
+    let cols = 2;
+    let h1 = '30 ML', h2 = '6x30 ML', h3 = '';
+
+    if (cLower.includes('wine')) {
+      cols = 2; h1 = 'Glass'; h2 = 'Bottle';
+    } else if (cLower.includes('beer')) {
+      cols = 3; h1 = 'Bottle'; h2 = 'Pint'; h3 = 'Can';
+    } else if (cLower.includes('long island')) {
+      cols = 2; h1 = '500 ML'; h2 = '1000 ML';
+    }
+
     wrap.innerHTML = `
       <div class="cat-block">
         <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
         <div class="bar-header">
           <div class="bh-spacer"></div>
-          <div class="bh-title">30 ML</div>
-          <div class="bh-title">6x30 ML</div>
+          <div class="bh-title">${h1}</div>
+          ${cols >= 2 ? `<div class="bh-title">${h2}</div>` : ''}
+          ${cols >= 3 ? `<div class="bh-title">${h3}</div>` : ''}
         </div>
         ${items.map(it=>`
           <div class="menu-item bar-list-item">
@@ -741,14 +800,15 @@ function renderCategoryItems(type, cat){
               ${itemBadges(it)}
               <span class="name">${escapeHtml(it.name)}</span>
             </span>
-            <span class="bp-val-col">${escapeHtml(it.price30)}</span>
-            <span class="bp-val-col">${escapeHtml(it.price180)}</span>
+            <span class="bp-val-col">${escapeHtml(it.price1)}</span>
+            ${cols >= 2 ? `<span class="bp-val-col">${escapeHtml(it.price2)}</span>` : ''}
+            ${cols >= 3 ? `<span class="bp-val-col">${escapeHtml(it.price3)}</span>` : ''}
           </div>
         `).join('')}
       </div>
     `;
   } else {
-    // Standard Food / Single Price Layout (for Shakes, Beverages, Snacks)
+    // Standard Food / Single Price Layout
     wrap.innerHTML = `
       <div class="cat-block">
         <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
@@ -759,7 +819,7 @@ function renderCategoryItems(type, cat){
               <span class="name">${escapeHtml(it.name)}</span>
             </span>
             <span class="dot"></span>
-            <span class="price">${escapeHtml(it.price)}</span>
+            <span class="price">${escapeHtml(it.price1)}</span>
           </div>
         `).join('')}
       </div>
@@ -778,48 +838,75 @@ searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim().toLowerCase();
   if(q.length < 1){ searchResults.style.display='none'; searchResults.innerHTML=''; return; }
 
-  const matches = [];
+  const catMatches = [];
+  const itemMatches = [];
+
   ['Food','Bar'].forEach(type=>{
     Object.keys(MENU[type]||{}).forEach(cat=>{
-      // Skip Special Categories for Search since they are image-only pages now
       if (type === 'Bar' && (cat === 'Cocktails' || cat === 'Mocktails')) return;
       
+      // Check for category match
+      if (cat.toLowerCase().includes(q)) {
+        catMatches.push({ isCat: true, name: cat, type: type, cat: cat });
+      }
+
+      // Check for item match
       MENU[type][cat].forEach(it=>{
         if(it.name.toLowerCase().includes(q)){
-          matches.push({ ...it, type, cat });
+          itemMatches.push({ isCat: false, ...it, type, cat });
         }
       });
     });
   });
 
+  const matches = [...catMatches, ...itemMatches];
   searchResults.style.display = 'block';
+  
   if(matches.length === 0){
-    searchResults.innerHTML = `<div class="sr-empty">No dish matches “${escapeHtml(searchInput.value)}”</div>`;
+    searchResults.innerHTML = `<div class="sr-empty">No matching dishes or categories for “${escapeHtml(searchInput.value)}”</div>`;
     return;
   }
   
   searchResults.innerHTML = matches.slice(0,25).map(m=>{
-    let displayPrice = m.price;
-    if (m.type === 'Bar' && !isSinglePriceBarCategory(m.cat)) {
-       displayPrice = (m.price30 && m.price30 !== '-') ? `${m.price30} (30ml)` : (m.price || '');
-    }
-    return `
-      <div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')">
-        <div>
-          <div class="sr-name">${escapeHtml(m.name)}</div>
-          <div class="sr-tag">${escapeHtml(m.type)} Menu · ${escapeHtml(m.cat)}</div>
+    if (m.isCat) {
+      return `
+        <div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')">
+          <div>
+            <div class="sr-name"><i class="fa-solid fa-list-ul" style="font-size:12px; color:var(--gold); margin-right:6px;"></i> ${escapeHtml(m.name)}</div>
+            <div class="sr-tag">Category in ${escapeHtml(m.type)} Menu</div>
+          </div>
         </div>
-        <div class="sr-price">${escapeHtml(displayPrice)}</div>
-      </div>
-    `;
+      `;
+    } else {
+      let displayPrice = m.price1;
+      const cLower = m.cat.toLowerCase();
+      
+      if (m.type === 'Bar' && !isSinglePriceBarCategory(m.cat)) {
+        if (cLower.includes('wine')) displayPrice = `${m.price1} (Glass)`;
+        else if (cLower.includes('beer')) displayPrice = `${m.price1} (Bottle)`;
+        else if (cLower.includes('long island')) displayPrice = `${m.price1} (500ml)`;
+        else displayPrice = `${m.price1} (30ml)`;
+      }
+
+      return `
+        <div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')">
+          <div>
+            <div class="sr-name">${escapeHtml(m.name)}</div>
+            <div class="sr-tag">${escapeHtml(m.type)} Menu · ${escapeHtml(m.cat)}</div>
+          </div>
+          <div class="sr-price">${escapeHtml(displayPrice)}</div>
+        </div>
+      `;
+    }
   }).join('');
 });
 
 function jumpToSearchResult(type, cat){
   activeType = type;
-  currentPage = 3; updatePageClasses();
+  openMenu(type);
   selectCategory(cat);
   searchResults.style.display='none';
+  searchInput.value='';
   searchInput.blur();
 }
 
