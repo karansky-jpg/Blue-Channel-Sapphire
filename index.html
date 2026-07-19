@@ -21,22 +21,12 @@
   html,body{
     margin:0;padding:0;width:100%;height:100%;overflow-x:hidden;
     background:var(--ink);font-family:'Jost',sans-serif;
-    overscroll-behavior-y:none; /* Prevents iOS full-page bounce */
+    overscroll-behavior:none; /* Prevents iOS full-page bounce (x and y) */
   }
   ::-webkit-scrollbar{display:none; width:0px;} /* Hide scrollbars for cleaner mobile view */
   a{text-decoration:none;}
 
-  /* ---------- top bar ---------- */
-  .agency-bar{
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    background:var(--navy);color:var(--gold);
-    padding:9px 14px;font-family:'Jost',sans-serif;font-weight:500;
-    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-    border-bottom:1px solid rgba(247,215,148,.25);
-  }
-  .agency-bar:hover{color:#fff;}
-  .agency-bar i{font-size:10px;}
-
+  /* ---------- top brand ---------- */
   header.brand{
     text-align:center;padding:16px 12px 10px;background:var(--ink);
   }
@@ -90,10 +80,14 @@
     display:flex;align-items:center;justify-content:center;
     padding:8px 10px 10px;position:relative;
   }
-  .book-container{perspective:2000px;width:100%;display:flex;justify-content:center;}
+  .book-container{
+    perspective:2000px;width:100%;display:flex;justify-content:center;
+  }
   .book{
     position:relative;width:100%;max-width:430px;height:min(72vh,660px);
     transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+    touch-action: pan-y; /* CRITICAL: Prevents native horizontal swiping/jitter on iOS/Android */
+    user-select: none; -webkit-user-select: none;
   }
   .book-spine{
     position:absolute;left:0;top:0;width:12px;height:100%;
@@ -116,7 +110,7 @@
     backface-visibility:hidden; -webkit-backface-visibility:hidden;
     border-radius:4px 14px 14px 4px;box-shadow:5px 5px 26px rgba(0,0,0,.35);
     overflow:hidden;background:var(--paper);
-    transform: translateZ(0); -webkit-transform: translateZ(0);
+    transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); /* Hardware acceleration to stop flicker */
   }
   .page-face.back{transform:rotateY(180deg); -webkit-transform:rotateY(180deg);}
   .page-overlay{
@@ -147,6 +141,17 @@
     cursor:pointer;border:none;
   }
   .review-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(247,215,148,.35);}
+
+  /* ---------- agency bar (bottom) ---------- */
+  .agency-bar{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--navy);color:var(--gold);
+    padding:12px 14px;font-family:'Jost',sans-serif;font-weight:500;
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    border-top:1px solid rgba(247,215,148,.25); width: 100%;
+  }
+  .agency-bar:hover{color:#fff;}
+  .agency-bar i{font-size:10px;}
 
   /* ---------- PAGE 1 : COVER ---------- */
   #p1 .page-face.front{
@@ -215,7 +220,7 @@
   .items-scroll{
     flex:1;overflow-y:auto;padding:16px 18px 20px;
     touch-action:pan-y;-webkit-overflow-scrolling:touch;
-    overscroll-behavior-y:contain; /* Stop nested scrolling bounce */
+    overscroll-behavior:contain; /* Stop nested scrolling bounce */
   }
   .cat-block{margin-bottom:22px;}
   .cat-title{
@@ -299,7 +304,7 @@
   .category-grid{
     flex:1;overflow-y:auto;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;
     touch-action:pan-y;-webkit-overflow-scrolling:touch;
-    overscroll-behavior-y:contain;
+    overscroll-behavior:contain;
   }
   .category-card{
     border:1px solid rgba(25,42,86,.18);border-radius:10px;background:#fff;
@@ -347,7 +352,7 @@
   <!-- Important Notes Modal -->
   <div id="notesModal" class="modal-overlay">
     <div class="modal-card">
-      <h3 class="modal-title">Important Note</h3>
+      <h3 class="modal-title">Important Notes</h3>
       <ul class="modal-list">
         <li>No service charges is levied.</li>
         <li>All rates are exclusive of GST.</li>
@@ -360,10 +365,6 @@
       <button class="modal-close" onclick="closeNotes()">Close</button>
     </div>
   </div>
-
-  <a class="agency-bar" href="https://karan-digital-menu-agency.vercel.app/" target="_blank" rel="noopener">
-    <i class="fa-solid fa-sparkles"></i> Created by Karan Digital Menu Agency <i class="fa-solid fa-arrow-up-right-from-square"></i>
-  </a>
 
   <header class="brand">
     <h1>HOTEL SAPPHIRE</h1>
@@ -461,6 +462,10 @@
     </div>
     <div class="sync" id="syncStatus"><span class="dotpulse"></span> Connecting to menu sheet…</div>
   </footer>
+
+  <a class="agency-bar" href="https://karan-digital-menu-agency.vercel.app/" target="_blank" rel="noopener">
+    <i class="fa-solid fa-sparkles"></i> Created by Karan Digital Menu Agency <i class="fa-solid fa-arrow-up-right-from-square"></i>
+  </a>
 
 <script>
 /* ============ MODAL LOGIC ============ */
@@ -581,10 +586,8 @@ function buildMenuFromRows(rows){
   const chefI = headers.findIndex(h => /\b(chef|special)\b/.test(h));
   const spicyI= headers.findIndex(h => /\b(spicy|hot)\b/.test(h));
   
-  // Highly robust Veg/Non-Veg search
   const vegI = headers.findIndex(h => /\b(veg|diet|type)\b/i.test(h) || h.includes('veg/non'));
 
-  // Pinpoint exact price columns if named
   const cols = { reg: -1, ml30: -1, ml180: -1, glass: -1, bottle: -1, pint: -1, can: -1, ml500: -1, ml1000: -1 };
   const allPriceCols = [];
 
@@ -599,7 +602,6 @@ function buildMenuFromRows(rows){
     if(/\b500\b/.test(h) && cols.ml500 === -1) cols.ml500 = i;
     if(/\b1000\b/.test(h) && cols.ml1000 === -1) cols.ml1000 = i;
 
-    // Grab ANY column that looks like it has prices as a global fallback
     if (/\b(price|rs|rate|cost|30|180|6x|peg|single|glass|bottle|pint|can|500|1000)\b/i.test(h) || h.includes('₹')) {
         allPriceCols.push(i);
     }
@@ -615,7 +617,6 @@ function buildMenuFromRows(rows){
     const type = typeI!==-1 ? normType(r[typeI]) : 'Food';
     const cat = catI!==-1 ? (r[catI]||'Other').trim() : 'Other';
 
-    // Parse diets robustly (Green = Veg, Red = Non-Veg)
     let veg = null;
     if(vegI !== -1){
       const v = (r[vegI]||'').toString().toLowerCase().trim().replace(/[^a-z]/g, '');
@@ -628,7 +629,6 @@ function buildMenuFromRows(rows){
     const fmt = p => (!p || p==='-' || p.toLowerCase()==='na') ? '-' : (p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'').trim());
     const getVal = (colIdx) => colIdx !== -1 ? fmt((r[colIdx]||'').trim()) : '-';
 
-    // Build array of ALL valid prices written for THIS row, to use as bulletproof fallback
     let validPrices = [];
     allPriceCols.forEach(idx => {
         let val = (r[idx]||'').trim();
@@ -648,7 +648,6 @@ function buildMenuFromRows(rows){
     let price1 = '-', price2 = '-', price3 = '-';
     const cLower = cat.toLowerCase();
 
-    // Logic to perfectly assign prices to correct headers based on Category, using validPrices array if explicit columns miss
     if (type === 'Bar') {
         if (cLower.includes('wine')) {
             price1 = pGlass !== '-' ? pGlass : (validPrices[0] || '-');
