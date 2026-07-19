@@ -26,7 +26,6 @@
   ::-webkit-scrollbar{display:none; width:0px;} 
   a{text-decoration:none;}
 
-  /* ---------- top brand ---------- */
   header.brand{
     text-align:center;padding:16px 12px 10px;background:var(--ink);
   }
@@ -39,7 +38,6 @@
     margin:5px 0 0;
   }
 
-  /* ---------- search bar ---------- */
   .search-wrap{
     background:var(--ink);padding:0 16px 14px;display:flex;justify-content:center;
   }
@@ -75,7 +73,6 @@
   #searchResults .sr-price{font-family:'Jost',sans-serif;font-weight:500;color:var(--navy);font-size:13px;}
   #searchResults .sr-empty{padding:16px;text-align:center;color:#8a94a3;font-size:12px;}
 
-  /* ---------- book ---------- */
   main{
     display:flex;align-items:center;justify-content:center;
     padding:8px 10px 10px;position:relative;
@@ -126,7 +123,6 @@
   }
   .book-page.flipped .page-overlay{opacity:.14;}
 
-  /* dots & footers */
   footer.foot{
     display:flex;flex-direction:column;align-items:center;gap:10px;
     padding:6px 12px 22px;background:var(--ink);
@@ -147,7 +143,6 @@
   }
   .review-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(247,215,148,.35);}
 
-  /* ---------- agency bar (bottom) ---------- */
   .agency-bar{
     display:flex;align-items:center;justify-content:center;gap:8px;
     background:var(--navy);color:var(--gold);
@@ -158,7 +153,6 @@
   .agency-bar:hover{color:#fff;}
   .agency-bar i{font-size:10px;}
 
-  /* ---------- PAGE 1 : COVER ---------- */
   #p1 .page-face.front{
     display:flex;flex-direction:column;justify-content:space-between;
   }
@@ -191,7 +185,6 @@
   }
   @keyframes sway{0%,100%{transform:translateX(0);}50%{transform:translateX(6px);}}
 
-  /* ---------- PAGE 2 : SELECT ---------- */
   #p2 .page-face.front{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:26px;padding:30px;background:var(--paper);}
   .p2-eyebrow{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--navy);opacity:.55;}
   .choice-card{
@@ -206,7 +199,6 @@
   .choice-card p{font-family:'Cormorant Garamond',serif;font-style:italic;color:#7a7264;font-size:13px;margin:0;}
   .choice-card i{color:var(--gold);font-size:20px;margin-bottom:10px;display:block;}
 
-  /* ---------- PAGE 3 : MENU ---------- */
   #p3 .page-face.front{display:flex;flex-direction:column;padding:0;background:var(--paper);}
   .menu-head{
     display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;
@@ -236,7 +228,6 @@
   }
   .cat-title-wrap{text-align:center;}
   
-  /* Standard Food Menu Items & Descriptions */
   .menu-item { display: flex; flex-direction: column; padding: 6px 4px; gap: 4px; }
   .item-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; width: 100%; }
   
@@ -245,7 +236,6 @@
   .item-top .dot { flex: 1; border-bottom: 2px dotted rgba(25,42,86,.22); margin: 0 6px; position: relative; top: -4px; }
   .item-top .price { font-family: 'Jost', sans-serif; font-weight: 500; color: var(--navy); font-size: 13px; white-space: nowrap; }
   
-  /* Advanced Bar Menu Items */
   .menu-item.bar-list-item { padding: 10px 4px; border-bottom: 1px dashed rgba(25,42,86,.12); }
   .menu-item.bar-list-item:last-child { border-bottom: none; }
   .menu-item.bar-list-item .item-top .name-wrap { flex: 1; justify-content: flex-start; padding-right: 5px; }
@@ -265,14 +255,12 @@
     font-family: 'Jost', sans-serif; font-weight: 500; color: var(--navy); font-size: 13.5px;
   }
 
-  /* Descriptions formatting */
   .item-desc {
     font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14.5px;
-    color: #a9822f; /* Premium readable gold matching the chef icon */
+    color: #a9822f;
     padding-left: 20px; line-height: 1.25; margin-top: -2px;
   }
 
-  /* Image Categories */
   .img-page-wrap { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
   .img-page-wrap img {
     width: 100%; height: auto; border-radius: 12px;
@@ -288,7 +276,6 @@
     margin:0 0 12px;letter-spacing:.01em; line-height:1.4;
   }
 
-  /* diet marks + badges */
   .diet-mark{width:14px;height:14px;border:1.5px solid;display:inline-flex;align-items:center;justify-content:center;border-radius:2px;flex:0 0 auto;}
   .diet-mark.veg{border-color:#1a8a3d;}
   .diet-mark.veg::after{content:"";width:6px;height:6px;border-radius:50%;background:#1a8a3d;}
@@ -298,7 +285,6 @@
   .badge-icon.chef{color:#a9822f;}
   .badge-icon.spicy{color:#c73a2e;}
 
-  /* category grid view */
   .category-grid{
     flex:1;overflow-y:auto;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;
     touch-action:pan-y;-webkit-overflow-scrolling:touch;
@@ -312,7 +298,6 @@
   .category-card .cc-icon{color:var(--gold);font-size:18px;margin-bottom:8px;display:block;}
   .category-card .cc-name{font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--navy);font-size:14.5px;text-transform:uppercase;letter-spacing:.05em;}
   
-  /* ---------- MODAL ---------- */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 9999;
     display: flex; align-items: center; justify-content: center;
@@ -347,7 +332,6 @@
 </head>
 <body>
 
-  <!-- Important Notes Modal -->
   <div id="notesModal" class="modal-overlay">
     <div class="modal-card">
       <h3 class="modal-title">Important Note</h3>
@@ -382,7 +366,6 @@
       <div class="book" id="book">
         <div class="book-spine"></div>
 
-        <!-- PAGE 1 — COVER -->
         <div class="book-page active" id="p1">
           <div class="page-face front">
             <div class="cover-img"></div>
@@ -391,7 +374,6 @@
               <div class="cover-mid"></div>
               <div class="cover-bottom">
                 <div class="cover-line"></div>
-                <!-- Forced break to guarantee exact identical styling on iOS/Android -->
                 <div class="cover-brand">BLUE<br>CHANNEL</div>
                 <p class="cover-tag">Global Flavours, Timeless Elegance</p>
                 <div class="swipe-pill">Swipe left for menu <i class="fa-solid fa-angles-right"></i></div>
@@ -401,7 +383,6 @@
           <div class="page-overlay"></div>
         </div>
 
-        <!-- PAGE 2 — SELECT -->
         <div class="book-page" id="p2">
           <div class="page-face front">
             <div class="p2-eyebrow">What would you like today</div>
@@ -419,7 +400,6 @@
           <div class="page-overlay"></div>
         </div>
 
-        <!-- PAGE 3 — MENU -->
         <div class="book-page" id="p3">
           <div class="page-face front">
             <div class="menu-head">
@@ -448,7 +428,6 @@
           </div>
           <div class="page-overlay"></div>
         </div>
-
       </div>
     </div>
   </main>
@@ -467,24 +446,22 @@
   </a>
 
 <script>
-/* ============ MODAL LOGIC ============ */
 function openNotes() { document.getElementById('notesModal').classList.add('show'); }
 function closeNotes() { document.getElementById('notesModal').classList.remove('show'); }
 document.getElementById('notesModal').addEventListener('click', e => {
     if (e.target === e.currentTarget) closeNotes();
 });
 
-/* ============ SPECIAL BAR IMAGES ============ */
 const SPECIAL_BAR_CATS = {
   'Cocktails': [
-    'https://i.ibb.co/1GJD6TVN/Screenshot-20260716-161411-Files-by-Google.jpg',
-    'https://i.ibb.co/SDmjx6dQ/Screenshot-20260716-161429-Files-by-Google.jpg',
-    'https://i.ibb.co/ksQdb0rF/Screenshot-20260716-161444-Files-by-Google.jpg'
+    'https://i.ibb.co/9kFh3h3s/Screenshot-20260719-135243-Adobe-Acrobat.jpg',
+    'https://i.ibb.co/b55tn8rq/Screenshot-20260719-135328-Adobe-Acrobat.jpg',
+    'https://i.ibb.co/8LHxdDh6/Screenshot-20260719-135356-Adobe-Acrobat.jpg'
   ],
   'Mocktails': [
-    'https://i.ibb.co/ffMCzCj/Screenshot-20260716-161500-Files-by-Google.jpg',
-    'https://i.ibb.co/tMD783LR/Screenshot-20260716-161504-Files-by-Google.jpg',
-    'https://i.ibb.co/rRCdDDkn/Screenshot-20260716-161515-Files-by-Google.jpg'
+    'https://i.ibb.co/1tkD4Gjx/Screenshot-20260719-135416-Adobe-Acrobat.jpg',
+    'https://i.ibb.co/tNKTxn2/Screenshot-20260719-135433-Adobe-Acrobat.jpg',
+    'https://i.ibb.co/Kcfk02Tq/Screenshot-20260719-135449-Adobe-Acrobat.jpg'
   ]
 };
 
@@ -494,7 +471,6 @@ function isSinglePriceBarCategory(cat) {
   return singlePriceKeywords.some(kw => norm.includes(kw));
 }
 
-/* ============ BOOK NAVIGATION ============ */
 let currentPage = 1;
 const totalPages = 3;
 
@@ -535,7 +511,6 @@ bookEl.addEventListener('touchend', e=>{
 function handleSwipe(distX, distY){
   const threshold = 50;
   if(Math.abs(distX) < Math.abs(distY)) return;
-
   if(distX < -threshold){
     if(currentPage >= 2) return;
     if(currentPage < totalPages){ currentPage++; updatePageClasses(); }
@@ -544,7 +519,6 @@ function handleSwipe(distX, distY){
   }
 }
 
-/* ============ MENU DATA ============ */
 const SHEET_ID = "13Uj_BetnGSAhWhs4bkTf78sJXHsq8Vo8NswwrP8tr5s";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 
@@ -578,16 +552,13 @@ function truthy(v){
 
 function buildMenuFromRows(rows){
   const headers = rows[0].map(h=>h.toLowerCase().trim());
-  
   const typeI = headers.findIndex(h => /\b(type|menu)\b/.test(h));
   const catI  = headers.findIndex(h => /\b(category|section)\b/.test(h));
   const nameI = headers.findIndex(h => /\b(item|name|dish)\b/.test(h));
-  const descI = headers.findIndex(h => /\b(desc|description|details)\b/.test(h)); // Extracts description
+  const descI = headers.findIndex(h => /\b(desc|description|details)\b/.test(h));
   const chefI = headers.findIndex(h => /\b(chef|special)\b/.test(h));
   const spicyI= headers.findIndex(h => /\b(spicy|hot)\b/.test(h));
-  
   const vegI = headers.findIndex(h => /\b(veg|diet|type)\b/i.test(h) || h.includes('veg/non'));
-
   const cols = { reg: -1, ml30: -1, ml180: -1, glass: -1, bottle: -1, pint: -1, ml500: -1, ml1000: -1 };
   const allPriceCols = [];
 
@@ -600,24 +571,19 @@ function buildMenuFromRows(rows){
     if(/\bpint\b/.test(h) && cols.pint === -1) cols.pint = i;
     if(/\b500\b/.test(h) && cols.ml500 === -1) cols.ml500 = i;
     if(/\b1000\b/.test(h) && cols.ml1000 === -1) cols.ml1000 = i;
-
-    // We no longer scan for 'can' specifically since it's deleted
     if (/\b(price|rs|rate|cost|30|180|6x|peg|single|glass|bottle|pint|500|1000)\b/i.test(h) || h.includes('₹')) {
         allPriceCols.push(i);
     }
   });
 
   const data = { Food:{}, Bar:{} };
-
   for(let i=1;i<rows.length;i++){
     const r = rows[i];
     const name = nameI!==-1 ? (r[nameI]||'').trim() : '';
     if(!name) continue;
-    
     const description = descI!==-1 ? (r[descI]||'').trim() : '';
     const type = typeI!==-1 ? normType(r[typeI]) : 'Food';
     const cat = catI!==-1 ? (r[catI]||'Other').trim() : 'Other';
-
     let veg = null;
     if(vegI !== -1){
       const v = (r[vegI]||'').toString().toLowerCase().trim().replace(/[^a-z]/g, '');
@@ -626,54 +592,25 @@ function buildMenuFromRows(rows){
     }
     const chefSpecial = chefI!==-1 ? truthy(r[chefI]) : false;
     const spicy = spicyI!==-1 ? truthy(r[spicyI]) : false;
-    
     const fmt = p => (!p || p==='-' || p.toLowerCase()==='na') ? '-' : (p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'').trim());
     const getVal = (colIdx) => colIdx !== -1 ? fmt((r[colIdx]||'').trim()) : '-';
-
     let validPrices = [];
     allPriceCols.forEach(idx => {
         let val = (r[idx]||'').trim();
         if (val && val !== '-' && val.toLowerCase() !== 'na') validPrices.push(fmt(val));
     });
-
-    let pReg = getVal(cols.reg);
-    let p30 = getVal(cols.ml30);
-    let p180 = getVal(cols.ml180);
-    let pGlass = getVal(cols.glass);
-    let pBottle = getVal(cols.bottle); // The actual 'Bottle' column data for beer
-    let pPint = getVal(cols.pint);
-    let p500 = getVal(cols.ml500);
-    let p1000 = getVal(cols.ml1000);
-
+    let pReg = getVal(cols.reg), p30 = getVal(cols.ml30), p180 = getVal(cols.ml180), pGlass = getVal(cols.glass), pBottle = getVal(cols.bottle), pPint = getVal(cols.pint), p500 = getVal(cols.ml500), p1000 = getVal(cols.ml1000);
     let price1 = '-', price2 = '-', price3 = '-';
     const cLower = cat.toLowerCase();
-
     if (type === 'Bar') {
-        if (cLower.includes('wine')) {
-            price1 = pGlass !== '-' ? pGlass : (validPrices[0] || '-');
-            price2 = pBottle !== '-' ? pBottle : (validPrices[1] || '-');
-        } else if (cLower.includes('beer')) {
-            // "Can" is now fully removed, extracting strictly Bottle and Pint data
-            price1 = pBottle !== '-' ? pBottle : (validPrices[0] || '-');
-            price2 = pPint !== '-' ? pPint : (validPrices[1] || '-');
-            price3 = '-'; 
-        } else if (cLower.includes('long island')) {
-            price1 = p500 !== '-' ? p500 : (validPrices[0] || '-');
-            price2 = p1000 !== '-' ? p1000 : (validPrices[1] || '-');
-        } else if (!isSinglePriceBarCategory(cat)) {
-            price1 = p30 !== '-' ? p30 : (validPrices[0] || '-');
-            price2 = p180 !== '-' ? p180 : (validPrices[1] || '-');
-        } else {
-            price1 = pReg !== '-' ? pReg : (validPrices[0] || '-');
-        }
-    } else {
-        price1 = pReg !== '-' ? pReg : (validPrices[0] || '-');
-    }
-
-    const itemObj = { name, description, veg, chefSpecial, spicy, price1, price2, price3 };
-
+        if (cLower.includes('wine')) { price1 = pGlass !== '-' ? pGlass : (validPrices[0] || '-'); price2 = pBottle !== '-' ? pBottle : (validPrices[1] || '-'); }
+        else if (cLower.includes('beer')) { price1 = pBottle !== '-' ? pBottle : (validPrices[0] || '-'); price2 = pPint !== '-' ? pPint : (validPrices[1] || '-'); }
+        else if (cLower.includes('long island')) { price1 = p500 !== '-' ? p500 : (validPrices[0] || '-'); price2 = p1000 !== '-' ? p1000 : (validPrices[1] || '-'); }
+        else if (!isSinglePriceBarCategory(cat)) { price1 = p30 !== '-' ? p30 : (validPrices[0] || '-'); price2 = p180 !== '-' ? p180 : (validPrices[1] || '-'); }
+        else { price1 = pReg !== '-' ? pReg : (validPrices[0] || '-'); }
+    } else { price1 = pReg !== '-' ? pReg : (validPrices[0] || '-'); }
     if(!data[type][cat]) data[type][cat] = [];
-    data[type][cat].push(itemObj);
+    data[type][cat].push({ name, description, veg, chefSpecial, spicy, price1, price2, price3 });
   }
   return data;
 }
@@ -698,31 +635,19 @@ async function loadMenu(){
   }
 }
 
-/* ============ MENU RENDERING ============ */
 let menuView = 'category';
-
 function openMenu(type){
   activeType = type;
   document.getElementById('menuTitle').textContent = type === 'Food' ? 'Food Menu' : 'Bar Menu';
-  
   const footNote = document.getElementById('dynamicFooterNotes');
-  if(type === 'Bar') {
-    footNote.innerHTML = `All rates are exclusive of GST.<br>Standard measure is 30ml.<br>Brands are subject to availability.<br>Please let us know if you are allergic to any ingredient.`;
-  } else {
-    footNote.innerHTML = `All rates are exclusive of GST.<br>Please let us know if you are allergic to any ingredient.`;
-  }
-
+  footNote.innerHTML = type === 'Bar' ? `All rates are exclusive of GST.<br>Standard measure is 30ml.<br>Brands are subject to availability.` : `All rates are exclusive of GST.`;
   currentPage = 3; updatePageClasses();
   showCategoryGrid(type);
 }
 
 function handleMenuBack(){
-  if(menuView === 'items'){
-    showCategoryGrid(activeType);
-  } else {
-    activeType = null;
-    goToPage(2);
-  }
+  if(menuView === 'items'){ showCategoryGrid(activeType); }
+  else { activeType = null; goToPage(2); }
 }
 
 function showCategoryGrid(type){
@@ -730,33 +655,20 @@ function showCategoryGrid(type){
   document.getElementById('menuTitle').textContent = type === 'Food' ? 'Food Menu' : 'Bar Menu';
   document.getElementById('categoryGrid').style.display = 'grid';
   document.getElementById('itemsView').style.display = 'none';
-
   let cats = Object.keys(MENU[type] || {});
-  
   if(type === 'Bar') {
     const special = ['Cocktails', 'Mocktails'];
     cats = cats.filter(c => !special.includes(c)); 
     cats = [...special, ...cats]; 
   }
-
   const grid = document.getElementById('categoryGrid');
-
-  if(cats.length === 0){
-    grid.innerHTML = `<div class="menu-empty" style="grid-column:1/-1;">Menu is being set up. Please check back shortly.</div>`;
-    return;
-  }
-
+  if(cats.length === 0){ grid.innerHTML = `<div class="menu-empty" style="grid-column:1/-1;">Menu is being set up.</div>`; return; }
   const defaultIcon = type === 'Bar' ? 'fa-martini-glass-citrus' : 'fa-utensils';
   grid.innerHTML = cats.map(c=>{
     let iconClass = defaultIcon;
     if(type === 'Bar' && c === 'Cocktails') iconClass = 'fa-wine-glass';
     else if(type === 'Bar' && c === 'Mocktails') iconClass = 'fa-glass-water';
-
-    return `
-      <div class="category-card" onclick="selectCategory('${escapeAttr(c)}')">
-        <i class="fa-solid ${iconClass} cc-icon"></i>
-        <div class="cc-name">${escapeHtml(c)}</div>
-      </div>`;
+    return `<div class="category-card" onclick="selectCategory('${escapeAttr(c)}')"><i class="fa-solid ${iconClass} cc-icon"></i><div class="cc-name">${escapeHtml(c)}</div></div>`;
   }).join('');
 }
 
@@ -764,21 +676,15 @@ function selectCategory(cat){
   activeCategory = cat;
   menuView = 'items';
   document.getElementById('categoryGrid').style.display = 'none';
-  const itemsView = document.getElementById('itemsView');
-  itemsView.style.display = 'flex';
-
+  document.getElementById('itemsView').style.display = 'flex';
   let cats = Object.keys(MENU[activeType] || {});
   if(activeType === 'Bar') {
     const special = ['Cocktails', 'Mocktails'];
     cats = cats.filter(c => !special.includes(c));
     cats = [...special, ...cats];
   }
-
   const scroller = document.getElementById('catScroller');
-  scroller.innerHTML = cats.map(c=>
-    `<div class="cat-chip${c===activeCategory?' active':''}" data-cat="${escapeHtml(c)}" onclick="selectCategoryChip('${escapeAttr(c)}', this)">${escapeHtml(c)}</div>`
-  ).join('');
-
+  scroller.innerHTML = cats.map(c=>`<div class="cat-chip${c===activeCategory?' active':''}" data-cat="${escapeHtml(c)}" onclick="selectCategoryChip('${escapeAttr(c)}', this)">${escapeHtml(c)}</div>`).join('');
   renderCategoryItems(activeType, cat);
 }
 
@@ -792,183 +698,63 @@ function selectCategoryChip(cat, el){
 
 function itemBadges(it){
   let out = '';
-  if(it.veg === true) out += `<span class="diet-mark veg" title="Vegetarian"></span>`;
-  else if(it.veg === false) out += `<span class="diet-mark nonveg" title="Non-Vegetarian"></span>`;
-  if(it.chefSpecial) out += `<svg class="badge-icon chef" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" title="Chef's Special"><path d="M12 2c-1.2 0-2.24.72-2.7 1.76A3.5 3.5 0 0 0 5 7.5c0 .3.03.58.09.86A4 4 0 0 0 6 16v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a4 4 0 0 0 .91-7.64A3.5 3.5 0 0 0 14.7 3.76 2.98 2.98 0 0 0 12 2ZM8 20h8v1H8v-1Z"/></svg>`;
-  if(it.spicy) out += `<i class="fa-solid fa-pepper-hot badge-icon spicy" title="Spicy"></i>`;
+  if(it.veg === true) out += `<span class="diet-mark veg"></span>`;
+  else if(it.veg === false) out += `<span class="diet-mark nonveg"></span>`;
+  if(it.chefSpecial) out += `<svg class="badge-icon chef" viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M12 2c-1.2 0-2.24.72-2.7 1.76A3.5 3.5 0 0 0 5 7.5c0 .3.03.58.09.86A4 4 0 0 0 6 16v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a4 4 0 0 0 .91-7.64A3.5 3.5 0 0 0 14.7 3.76 2.98 2.98 0 0 0 12 2ZM8 20h8v1H8v-1Z"/></svg>`;
+  if(it.spicy) out += `<i class="fa-solid fa-pepper-hot badge-icon spicy"></i>`;
   return out;
 }
 
 function renderCategoryItems(type, cat){
   const category = cat || activeCategory;
   const wrap = document.getElementById('itemsScroll');
-
   if(type === 'Bar' && (category === 'Cocktails' || category === 'Mocktails')) {
-    const images = SPECIAL_BAR_CATS[category];
-    wrap.innerHTML = `
-      <div class="cat-block">
-        <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
-        <div class="img-page-wrap">
-          ${images.map(src => `<img src="${src}" alt="${category} Menu Image" loading="lazy">`).join('')}
-        </div>
-      </div>
-    `;
+    wrap.innerHTML = `<div class="cat-block"><div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div><div class="img-page-wrap">${SPECIAL_BAR_CATS[category].map(src => `<img src="${src}" alt="Menu Image" loading="lazy">`).join('')}</div></div>`;
     return;
   }
-
   const items = (MENU[type] && MENU[type][category]) || [];
-  if(items.length === 0){
-    wrap.innerHTML = `<div class="menu-empty">No items in this category yet.</div>`;
-    return;
-  }
-
   const isSinglePrice = type === 'Food' || isSinglePriceBarCategory(category);
   const cLower = category.toLowerCase();
-
   if(!isSinglePrice) {
-    let cols = 2;
-    let h1 = '30 ML', h2 = '6x30 ML', h3 = '';
-
-    if (cLower.includes('wine')) {
-      cols = 2; h1 = 'Glass'; h2 = 'Bottle';
-    } else if (cLower.includes('beer')) {
-      // Renamed Bottle to Bottle/Can, Can completely removed
-      cols = 2; h1 = 'Bottle/Can'; h2 = 'Pint'; h3 = '';
-    } else if (cLower.includes('long island')) {
-      cols = 2; h1 = '500 ML'; h2 = '1000 ML';
-    }
-
-    wrap.innerHTML = `
-      <div class="cat-block">
-        <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
-        <div class="bar-header">
-          <div class="bh-spacer"></div>
-          <div class="bh-title">${h1}</div>
-          ${cols >= 2 ? `<div class="bh-title">${h2}</div>` : ''}
-          ${cols >= 3 ? `<div class="bh-title">${h3}</div>` : ''}
-        </div>
-        ${items.map(it=>`
-          <div class="menu-item bar-list-item">
-            <div class="item-top">
-              <span class="name-wrap">
-                ${itemBadges(it)}
-                <span class="name">${escapeHtml(it.name)}</span>
-              </span>
-              <span class="bp-val-col">${escapeHtml(it.price1)}</span>
-              ${cols >= 2 ? `<span class="bp-val-col">${escapeHtml(it.price2)}</span>` : ''}
-              ${cols >= 3 ? `<span class="bp-val-col">${escapeHtml(it.price3)}</span>` : ''}
-            </div>
-            ${it.description ? `<div class="item-desc">${escapeHtml(it.description)}</div>` : ''}
-          </div>
-        `).join('')}
-      </div>
-    `;
+    let cols = 2, h1 = '30 ML', h2 = '6x30 ML';
+    if (cLower.includes('wine')) { cols = 2; h1 = 'Glass'; h2 = 'Bottle'; }
+    else if (cLower.includes('beer')) { cols = 2; h1 = 'Bottle/Can'; h2 = 'Pint'; }
+    wrap.innerHTML = `<div class="cat-block"><div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div><div class="bar-header"><div class="bh-spacer"></div><div class="bh-title">${h1}</div><div class="bh-title">${h2}</div></div>${items.map(it=>`<div class="menu-item bar-list-item"><div class="item-top"><span class="name-wrap">${itemBadges(it)}<span class="name">${escapeHtml(it.name)}</span></span><span class="bp-val-col">${escapeHtml(it.price1)}</span><span class="bp-val-col">${escapeHtml(it.price2)}</span></div>${it.description ? `<div class="item-desc">${escapeHtml(it.description)}</div>` : ''}</div>`).join('')}</div>`;
   } else {
-    wrap.innerHTML = `
-      <div class="cat-block">
-        <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
-        ${items.map(it=>`
-          <div class="menu-item">
-            <div class="item-top">
-              <span class="name-wrap">
-                ${itemBadges(it)}
-                <span class="name">${escapeHtml(it.name)}</span>
-              </span>
-              <span class="dot"></span>
-              <span class="price">${escapeHtml(it.price1)}</span>
-            </div>
-            ${it.description ? `<div class="item-desc">${escapeHtml(it.description)}</div>` : ''}
-          </div>
-        `).join('')}
-      </div>
-    `;
+    wrap.innerHTML = `<div class="cat-block"><div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>${items.map(it=>`<div class="menu-item"><div class="item-top"><span class="name-wrap">${itemBadges(it)}<span class="name">${escapeHtml(it.name)}</span></span><span class="dot"></span><span class="price">${escapeHtml(it.price1)}</span></div>${it.description ? `<div class="item-desc">${escapeHtml(it.description)}</div>` : ''}</div>`).join('')}</div>`;
   }
 }
 
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function escapeAttr(s){ return (s||'').replace(/'/g, "\\'"); }
 
-/* ============ SEARCH ============ */
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
 
 searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim().toLowerCase();
-  if(q.length < 1){ searchResults.style.display='none'; searchResults.innerHTML=''; return; }
-
-  const catMatches = [];
-  const itemMatches = [];
-
+  if(q.length < 1){ searchResults.style.display='none'; return; }
+  const matches = [];
   ['Food','Bar'].forEach(type=>{
     Object.keys(MENU[type]||{}).forEach(cat=>{
       if (type === 'Bar' && (cat === 'Cocktails' || cat === 'Mocktails')) return;
-      if (cat.toLowerCase().includes(q)) catMatches.push({ isCat: true, name: cat, type: type, cat: cat });
-
-      MENU[type][cat].forEach(it=>{
-        // Search matches name OR description content now!
-        if(it.name.toLowerCase().includes(q) || (it.description && it.description.toLowerCase().includes(q))){
-          itemMatches.push({ isCat: false, ...it, type, cat });
-        }
+      if (cat.toLowerCase().includes(q)) matches.push({ isCat: true, name: cat, type, cat });
+      (MENU[type][cat]||[]).forEach(it=>{
+        if(it.name.toLowerCase().includes(q) || (it.description && it.description.toLowerCase().includes(q))) matches.push({ isCat: false, ...it, type, cat });
       });
     });
   });
-
-  const matches = [...catMatches, ...itemMatches];
   searchResults.style.display = 'block';
-  
-  if(matches.length === 0){
-    searchResults.innerHTML = `<div class="sr-empty">No matching dishes or categories for “${escapeHtml(searchInput.value)}”</div>`;
-    return;
-  }
-  
-  searchResults.innerHTML = matches.slice(0,25).map(m=>{
-    if (m.isCat) {
-      return `
-        <div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')">
-          <div>
-            <div class="sr-name"><i class="fa-solid fa-list-ul" style="font-size:12px; color:var(--gold); margin-right:6px;"></i> ${escapeHtml(m.name)}</div>
-            <div class="sr-tag">Category in ${escapeHtml(m.type)} Menu</div>
-          </div>
-        </div>
-      `;
-    } else {
-      let displayPrice = m.price1;
-      const cLower = m.cat.toLowerCase();
-      
-      if (m.type === 'Bar' && !isSinglePriceBarCategory(m.cat)) {
-        if (cLower.includes('wine')) displayPrice = `${m.price1} (Glass)`;
-        else if (cLower.includes('beer')) displayPrice = `${m.price1} (Bottle/Can)`; // Updated search display for beer
-        else if (cLower.includes('long island')) displayPrice = `${m.price1} (500ml)`;
-        else displayPrice = `${m.price1} (30ml)`;
-      }
-
-      return `
-        <div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')">
-          <div>
-            <div class="sr-name">${escapeHtml(m.name)}</div>
-            <div class="sr-tag">${escapeHtml(m.type)} Menu · ${escapeHtml(m.cat)}</div>
-          </div>
-          <div class="sr-price">${escapeHtml(displayPrice)}</div>
-        </div>
-      `;
-    }
-  }).join('');
+  searchResults.innerHTML = matches.length === 0 ? `<div class="sr-empty">No results for “${escapeHtml(q)}”</div>` : matches.slice(0,25).map(m=>`<div class="sr-item" onclick="jumpToSearchResult('${escapeAttr(m.type)}','${escapeAttr(m.cat)}')"><div><div class="sr-name">${m.isCat?'<i class="fa-solid fa-list-ul"></i> ':''}${escapeHtml(m.name)}</div><div class="sr-tag">${m.type} · ${m.cat}</div></div>${!m.isCat?`<div class="sr-price">${escapeHtml(m.price1)}</div>`:''}</div>`).join('');
 });
 
 function jumpToSearchResult(type, cat){
-  activeType = type;
-  openMenu(type);
-  selectCategory(cat);
-  searchResults.style.display='none';
-  searchInput.value='';
-  searchInput.blur();
+  activeType = type; openMenu(type); selectCategory(cat);
+  searchResults.style.display='none'; searchInput.value='';
 }
 
-document.addEventListener('click', (e)=>{
-  if(!e.target.closest('.search-box')) { searchResults.style.display='none'; }
-});
+document.addEventListener('click', (e)=>{ if(!e.target.closest('.search-box')) searchResults.style.display='none'; });
 
-/* ============ INIT ============ */
 updatePageClasses();
 loadMenu();
 </script>
