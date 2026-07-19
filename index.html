@@ -18,10 +18,12 @@
     --paper:#fbf8f1;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
-  html,body{margin:0;padding:0;width:100%;height:100%;overflow-x:hidden;background:var(--ink);font-family:'Jost',sans-serif;}
-  ::-webkit-scrollbar{width:4px;}
-  ::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px;}
+  html,body{
+    margin:0;padding:0;width:100%;height:100%;overflow-x:hidden;
+    background:var(--ink);font-family:'Jost',sans-serif;
+    overscroll-behavior-y:none; /* Prevents iOS full-page bounce */
+  }
+  ::-webkit-scrollbar{display:none; width:0px;} /* Hide scrollbars for cleaner mobile view */
   a{text-decoration:none;}
 
   /* ---------- top bar ---------- */
@@ -59,6 +61,7 @@
     border:1px solid rgba(247,215,148,.35);background:rgba(255,255,255,.04);
     color:var(--gold);font-family:'Jost',sans-serif;font-size:13px;letter-spacing:.02em;
     outline:none;transition:border-color .25s;
+    -webkit-appearance:none; appearance:none; /* Normalizes iOS inputs */
   }
   .search-box input::placeholder{color:#7c8598;}
   .search-box input:focus{border-color:var(--gold);}
@@ -69,6 +72,7 @@
     max-width:440px;margin:8px auto 0;background:var(--paper);border-radius:10px;
     overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;max-height:280px;overflow-y:auto;
     position: absolute; width: 100%; z-index: 2000;
+    -webkit-overflow-scrolling: touch;
   }
   #searchResults .sr-item{
     display:flex;justify-content:space-between;align-items:baseline;gap:10px;
@@ -112,6 +116,7 @@
     backface-visibility:hidden; -webkit-backface-visibility:hidden;
     border-radius:4px 14px 14px 4px;box-shadow:5px 5px 26px rgba(0,0,0,.35);
     overflow:hidden;background:var(--paper);
+    transform: translateZ(0); -webkit-transform: translateZ(0);
   }
   .page-face.back{transform:rotateY(180deg); -webkit-transform:rotateY(180deg);}
   .page-overlay{
@@ -207,7 +212,11 @@
     font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);cursor:pointer;white-space:nowrap;transition:.2s;
   }
   .cat-chip.active{background:var(--navy);color:var(--gold);border-color:var(--navy);}
-  .items-scroll{flex:1;overflow-y:auto;padding:16px 18px 20px;touch-action:pan-y;-webkit-overflow-scrolling:touch;}
+  .items-scroll{
+    flex:1;overflow-y:auto;padding:16px 18px 20px;
+    touch-action:pan-y;-webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain; /* Stop nested scrolling bounce */
+  }
   .cat-block{margin-bottom:22px;}
   .cat-title{
     text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
@@ -232,7 +241,7 @@
   }
   .bh-spacer { flex: 1; }
   .bh-title {
-    width: 55px; /* Fits up to 3 columns nicely on mobile */
+    width: 55px;
     flex: 0 0 auto;
     margin-left: 5px;
     text-align: right;
@@ -277,12 +286,12 @@
   }
 
   /* diet marks + badges */
-  .diet-mark{width:12px;height:12px;border:1.5px solid;display:inline-flex;align-items:center;justify-content:center;border-radius:2px;flex:0 0 auto;}
+  .diet-mark{width:14px;height:14px;border:1.5px solid;display:inline-flex;align-items:center;justify-content:center;border-radius:2px;flex:0 0 auto;}
   .diet-mark.veg{border-color:#1a8a3d;}
-  .diet-mark.veg::after{content:"";width:5px;height:5px;border-radius:50%;background:#1a8a3d;}
+  .diet-mark.veg::after{content:"";width:6px;height:6px;border-radius:50%;background:#1a8a3d;}
   .diet-mark.nonveg{border-color:#b3221e;}
-  .diet-mark.nonveg::after{content:"";width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:6.5px solid #b3221e;}
-  .badge-icon{font-size:11px;flex:0 0 auto;}
+  .diet-mark.nonveg::after{content:"";width:0;height:0;border-left:4.5px solid transparent;border-right:4.5px solid transparent;border-bottom:7px solid #b3221e;}
+  .badge-icon{font-size:12px;flex:0 0 auto;}
   .badge-icon.chef{color:#a9822f;}
   .badge-icon.spicy{color:#c73a2e;}
 
@@ -290,6 +299,7 @@
   .category-grid{
     flex:1;overflow-y:auto;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;
     touch-action:pan-y;-webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
   }
   .category-card{
     border:1px solid rgba(25,42,86,.18);border-radius:10px;background:#fff;
@@ -337,7 +347,7 @@
   <!-- Important Notes Modal -->
   <div id="notesModal" class="modal-overlay">
     <div class="modal-card">
-      <h3 class="modal-title">Important Notes</h3>
+      <h3 class="modal-title">Important Note</h3>
       <ul class="modal-list">
         <li>No service charges is levied.</li>
         <li>All rates are exclusive of GST.</li>
@@ -383,7 +393,7 @@
               <div class="cover-bottom">
                 <div class="cover-line"></div>
                 <div class="cover-brand">Blue Channel</div>
-                <p class="cover-tag">Smart Dining, Simply Modern</p>
+                <p class="cover-tag">Global Flavours, Timeless Elegance</p>
                 <div class="swipe-pill">Swipe left for menu <i class="fa-solid fa-angles-right"></i></div>
               </div>
             </div>
@@ -530,11 +540,6 @@ function handleSwipe(distX, distY){
   }
 }
 
-document.addEventListener('keydown', e=>{
-  if(e.key==='ArrowLeft' && currentPage>1){ currentPage--; updatePageClasses(); }
-  else if(e.key==='ArrowRight' && currentPage<totalPages && currentPage<2){ currentPage++; updatePageClasses(); }
-});
-
 /* ============ MENU DATA ============ */
 const SHEET_ID = "13Uj_BetnGSAhWhs4bkTf78sJXHsq8Vo8NswwrP8tr5s";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
@@ -568,54 +573,104 @@ function truthy(v){
 }
 
 function buildMenuFromRows(rows){
-  const headers = rows[0].map(h=>h.toLowerCase().trim().replace(/\s+/g,'').replace(/[\*×X]/g,'x'));
+  const headers = rows[0].map(h=>h.toLowerCase().trim());
   
-  const typeI = headers.findIndex(h => h.includes('type') || h.includes('menu'));
-  const catI  = headers.findIndex(h => h.includes('category') || h.includes('section'));
-  const nameI = headers.findIndex(h => h.includes('item') || h.includes('name') || h.includes('dish'));
-  const vegI  = headers.findIndex(h => h.includes('veg') || h.includes('diet'));
-  const chefI = headers.findIndex(h => h.includes('chef') || h.includes('special'));
-  const spicyI= headers.findIndex(h => h.includes('spicy') || h.includes('hot'));
+  const typeI = headers.findIndex(h => /\b(type|menu)\b/.test(h));
+  const catI  = headers.findIndex(h => /\b(category|section)\b/.test(h));
+  const nameI = headers.findIndex(h => /\b(item|name|dish)\b/.test(h));
+  const chefI = headers.findIndex(h => /\b(chef|special)\b/.test(h));
+  const spicyI= headers.findIndex(h => /\b(spicy|hot)\b/.test(h));
   
-  // Extract up to 3 price columns dynamically
-  const priceIndices = [];
+  // Highly robust Veg/Non-Veg search
+  const vegI = headers.findIndex(h => /\b(veg|diet|type)\b/i.test(h) || h.includes('veg/non'));
+
+  // Pinpoint exact price columns if named
+  const cols = { reg: -1, ml30: -1, ml180: -1, glass: -1, bottle: -1, pint: -1, can: -1, ml500: -1, ml1000: -1 };
+  const allPriceCols = [];
+
   headers.forEach((h, i) => {
-    if (/price|rs|rate|cost|30|180|6x|peg|single|glass|bottle|pint|can|500|1000/i.test(h)) {
-      priceIndices.push(i);
+    if(/\b(price|rs|rate|cost)\b/.test(h) && cols.reg === -1) cols.reg = i;
+    if(/\b(30|peg)\b/.test(h) && cols.ml30 === -1) cols.ml30 = i;
+    if(/\b(180|6x30)\b/.test(h) && cols.ml180 === -1) cols.ml180 = i;
+    if(/\bglass\b/.test(h) && cols.glass === -1) cols.glass = i;
+    if(/\bbottle\b/.test(h) && cols.bottle === -1) cols.bottle = i;
+    if(/\bpint\b/.test(h) && cols.pint === -1) cols.pint = i;
+    if(/\bcan\b/.test(h) && cols.can === -1) cols.can = i;
+    if(/\b500\b/.test(h) && cols.ml500 === -1) cols.ml500 = i;
+    if(/\b1000\b/.test(h) && cols.ml1000 === -1) cols.ml1000 = i;
+
+    // Grab ANY column that looks like it has prices as a global fallback
+    if (/\b(price|rs|rate|cost|30|180|6x|peg|single|glass|bottle|pint|can|500|1000)\b/i.test(h) || h.includes('₹')) {
+        allPriceCols.push(i);
     }
   });
 
   const data = { Food:{}, Bar:{} };
+
   for(let i=1;i<rows.length;i++){
     const r = rows[i];
     const name = nameI!==-1 ? (r[nameI]||'').trim() : '';
     if(!name) continue;
+    
     const type = typeI!==-1 ? normType(r[typeI]) : 'Food';
     const cat = catI!==-1 ? (r[catI]||'Other').trim() : 'Other';
 
-    // Parse diets/badges robustly
+    // Parse diets robustly (Green = Veg, Red = Non-Veg)
     let veg = null;
-    if(vegI!==-1){
-      const v = (r[vegI]||'').toString().toLowerCase().trim();
+    if(vegI !== -1){
+      const v = (r[vegI]||'').toString().toLowerCase().trim().replace(/[^a-z]/g, '');
       if(v.includes('non') || v === 'nv') veg = false;
-      else if(v.includes('veg') || v === 'yes' || v === 'y' || v === 'true' || v === '1' || v === 'v') veg = true;
+      else if(v.includes('veg') || v === 'v' || v === 'yes' || v === 'true') veg = true;
     }
     const chefSpecial = chefI!==-1 ? truthy(r[chefI]) : false;
     const spicy = spicyI!==-1 ? truthy(r[spicyI]) : false;
     
-    const fmt = p => {
-      if(!p || p==='-' || p.toLowerCase()==='na') return '-';
-      return p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'').trim();
-    };
+    const fmt = p => (!p || p==='-' || p.toLowerCase()==='na') ? '-' : (p.startsWith('₹') ? p : '₹' + p.replace(/^rs\.?\s*/i,'').trim());
+    const getVal = (colIdx) => colIdx !== -1 ? fmt((r[colIdx]||'').trim()) : '-';
 
-    let p1 = priceIndices.length > 0 ? fmt(r[priceIndices[0]]) : '-';
-    let p2 = priceIndices.length > 1 ? fmt(r[priceIndices[1]]) : '-';
-    let p3 = priceIndices.length > 2 ? fmt(r[priceIndices[2]]) : '-';
+    // Build array of ALL valid prices written for THIS row, to use as bulletproof fallback
+    let validPrices = [];
+    allPriceCols.forEach(idx => {
+        let val = (r[idx]||'').trim();
+        if (val && val !== '-' && val.toLowerCase() !== 'na') validPrices.push(fmt(val));
+    });
 
-    const itemObj = { 
-      name, veg, chefSpecial, spicy,
-      price1: p1, price2: p2, price3: p3
-    };
+    let pReg = getVal(cols.reg);
+    let p30 = getVal(cols.ml30);
+    let p180 = getVal(cols.ml180);
+    let pGlass = getVal(cols.glass);
+    let pBottle = getVal(cols.bottle);
+    let pPint = getVal(cols.pint);
+    let pCan = getVal(cols.can);
+    let p500 = getVal(cols.ml500);
+    let p1000 = getVal(cols.ml1000);
+
+    let price1 = '-', price2 = '-', price3 = '-';
+    const cLower = cat.toLowerCase();
+
+    // Logic to perfectly assign prices to correct headers based on Category, using validPrices array if explicit columns miss
+    if (type === 'Bar') {
+        if (cLower.includes('wine')) {
+            price1 = pGlass !== '-' ? pGlass : (validPrices[0] || '-');
+            price2 = pBottle !== '-' ? pBottle : (validPrices[1] || '-');
+        } else if (cLower.includes('beer')) {
+            price1 = pBottle !== '-' ? pBottle : (validPrices[0] || '-');
+            price2 = pPint !== '-' ? pPint : (validPrices[1] || '-');
+            price3 = pCan !== '-' ? pCan : (validPrices[2] || '-');
+        } else if (cLower.includes('long island')) {
+            price1 = p500 !== '-' ? p500 : (validPrices[0] || '-');
+            price2 = p1000 !== '-' ? p1000 : (validPrices[1] || '-');
+        } else if (!isSinglePriceBarCategory(cat)) {
+            price1 = p30 !== '-' ? p30 : (validPrices[0] || '-');
+            price2 = p180 !== '-' ? p180 : (validPrices[1] || '-');
+        } else {
+            price1 = pReg !== '-' ? pReg : (validPrices[0] || '-');
+        }
+    } else {
+        price1 = pReg !== '-' ? pReg : (validPrices[0] || '-');
+    }
+
+    const itemObj = { name, veg, chefSpecial, spicy, price1, price2, price3 };
 
     if(!data[type][cat]) data[type][cat] = [];
     data[type][cat].push(itemObj);
@@ -650,7 +705,6 @@ function openMenu(type){
   activeType = type;
   document.getElementById('menuTitle').textContent = type === 'Food' ? 'Food Menu' : 'Bar Menu';
   
-  // Set dynamic footer notes
   const footNote = document.getElementById('dynamicFooterNotes');
   if(type === 'Bar') {
     footNote.innerHTML = `All rates are exclusive of GST.<br>Standard measure is 30ml.<br>Brands are subject to availability.<br>Please let us know if you are allergic to any ingredient.`;
@@ -749,7 +803,6 @@ function renderCategoryItems(type, cat){
   const category = cat || activeCategory;
   const wrap = document.getElementById('itemsScroll');
 
-  // Intercept Special Image Categories
   if(type === 'Bar' && (category === 'Cocktails' || category === 'Mocktails')) {
     const images = SPECIAL_BAR_CATS[category];
     wrap.innerHTML = `
@@ -773,7 +826,6 @@ function renderCategoryItems(type, cat){
   const cLower = category.toLowerCase();
 
   if(!isSinglePrice) {
-    // Dynamic Columns Logic
     let cols = 2;
     let h1 = '30 ML', h2 = '6x30 ML', h3 = '';
 
@@ -808,7 +860,6 @@ function renderCategoryItems(type, cat){
       </div>
     `;
   } else {
-    // Standard Food / Single Price Layout
     wrap.innerHTML = `
       <div class="cat-block">
         <div class="cat-title-wrap"><span class="cat-title">${escapeHtml(category)}</span></div>
@@ -844,13 +895,8 @@ searchInput.addEventListener('input', ()=>{
   ['Food','Bar'].forEach(type=>{
     Object.keys(MENU[type]||{}).forEach(cat=>{
       if (type === 'Bar' && (cat === 'Cocktails' || cat === 'Mocktails')) return;
-      
-      // Check for category match
-      if (cat.toLowerCase().includes(q)) {
-        catMatches.push({ isCat: true, name: cat, type: type, cat: cat });
-      }
+      if (cat.toLowerCase().includes(q)) catMatches.push({ isCat: true, name: cat, type: type, cat: cat });
 
-      // Check for item match
       MENU[type][cat].forEach(it=>{
         if(it.name.toLowerCase().includes(q)){
           itemMatches.push({ isCat: false, ...it, type, cat });
